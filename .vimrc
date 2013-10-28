@@ -137,6 +137,7 @@ au BufNewFile,BufRead *.log set filetype=messages
 au BufNewFile,BufRead *.tex set filetype=latex
 au BufNewFile,BufRead *.conf set filetype=txt
 au BufNewFile,BufRead *.txt set filetype=txt
+au BufNewFile,BufRead Makefile set filetype=make
 let g:neocomplcache_dictionary_filetype_lists = {
 	\ 'default' : '',
 	\ 'c' : $HOME.'/.vim/bundle/my-misc.vim/dict/c.dict',
