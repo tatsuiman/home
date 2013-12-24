@@ -76,9 +76,6 @@ NeoBundle 'yuratomo/java-api-servlet2.3'
 NeoBundle 'yuratomo/java-api-android'
 NeoBundle 'yuratomo/java-api-complete'
 NeoBundle 'sudar/vim-arduino-syntax'
-NeoBundle 'vim-scripts/Vim-R-plugin'
-NeoBundle 'vim-scripts/R-MacOSX'
-NeoBundle 'ervandew/screen'
 NeoBundle 'wannesm/wmgraphviz.vim'
 "other
 NeoBundle 'vim-scripts/Colour-Sampler-Pack'
@@ -209,10 +206,9 @@ au FileType javascript call FileTypeJavaScript()
 au FileType git :setlocal foldlevel=99
 
 " ctags
+let tail = &filetype
 let g:tagbar_ctags_bin = 'ctags'
-au FileType c set tags+=~/.vim/tags/clang
-au FileType cpp set tags+=~/.vim/tags/clang
-au BufNewFile,BufRead *.ino set tags+=~/.vim/bundle/my-misc.vim/tags/clang
+set tags+=tags;./**/tags
 
 "Filetype function
 function FileTypeJavaScript()
