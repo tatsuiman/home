@@ -51,6 +51,8 @@ NeoBundle 'itchyny/lightline.vim'
 "speed up
 NeoBundle 'Townk/vim-autoclose'
 NeoBundle 'Lokaltog/vim-easymotion'
+NeoBundle 't9md/vim-quickhl'
+NeoBundle 'jceb/vim-hier'
 "option
 NeoBundle 'mattn/excitetranslate-vim', {'depends': 'mattn/webapi-vim'} 
 NeoBundle 'vimtaku/vim-mlh'
@@ -247,6 +249,18 @@ noremap <F6> :!make clean;make run<CR>
 noremap <F7> :TagbarToggle<CR>
 noremap <F8> :YRGetElem<cr>
 noremap <F12> :sp<cr><c-w><c-w>:VimShell<cr>
+" Space
+
+" <Space>m でカーソル下の単語、もしくは選択した範囲のハイライトを行う
+" 再度 <Space>m を行うとカーソル下のハイライトを解除する
+" これは複数の単語のハイライトを行う事もできる
+" <Space>M で全てのハイライトを解除する
+nmap <Space>m <Plug>(quickhl-manual-this)
+xmap <Space>m <Plug>(quickhl-manual-this)
+nmap <Space>M <Plug>(quickhl-manual-reset)
+xmap <Space>M <Plug>(quickhl-manual-reset)
+
+
 " Leader \
 nnoremap <silent><Leader>1 :colorscheme inkpot<CR>
 nnoremap <silent><Leader>2 :call SetColorC2D()<CR>
