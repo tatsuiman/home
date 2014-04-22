@@ -14,9 +14,10 @@ endif
 " Neobundle.vim
 "
 " essential
-NeoBundle 'Shougo/neocomplcache.vim'
-NeoBundle 'Shougo/neobundle.vim'
+NeoBundle 'Shougo/neocomplcache'
+NeoBundle 'Shougo/neobundle'
 NeoBundle 'Shougo/neosnippet'
+NeoBundle 'Shougo/neosnippet-snippets'
 NeoBundle 'Shougo/vimproc.vim'
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/vimfiler.vim'
@@ -34,7 +35,6 @@ NeoBundle 'mattn/zencoding-vim'
 NeoBundle 'mattn/gist-vim'
 NeoBundle 'mattn/webapi-vim'
 NeoBundle 'othree/eregex.vim'
-NeoBundle 'scrooloose/snipmate-snippets'
 NeoBundle 'git://gist.github.com/411828.git', {'directory': 'endtagcomment'}
 NeoBundle 'vim-scripts/LogViewer'
 NeoBundle 'scrooloose/nerdcommenter'
@@ -46,7 +46,6 @@ NeoBundle 'mattn/sonictemplate-vim'
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'majutsushi/tagbar'
 NeoBundle 'thinca/vim-ref'
-NeoBundle 'yuratomo/w3m.vim'
 NeoBundle 'itchyny/lightline.vim'
 "speed up
 NeoBundle 'Townk/vim-autoclose'
@@ -68,7 +67,6 @@ NeoBundle 'Shougo/neocomplcache-rsense.vim'
 NeoBundle 'rhysd/unite-ruby-require.vim'
 NeoBundle 'rhysd/neco-ruby-keyword-args'
 NeoBundle 'kchmck/vim-coffee-script'
-NeoBundle 'sophacles/vim-processing'
 NeoBundle 'yuratomo/java-api-complete'
 NeoBundle 'yuratomo/java-api-javax'
 NeoBundle 'yuratomo/java-api-org'
@@ -76,11 +74,9 @@ NeoBundle 'yuratomo/java-api-sun'
 NeoBundle 'yuratomo/java-api-servlet2.3'
 NeoBundle 'yuratomo/java-api-android'
 NeoBundle 'yuratomo/java-api-complete'
-NeoBundle 'sudar/vim-arduino-syntax'
 NeoBundle 'wannesm/wmgraphviz.vim'
 "other
 NeoBundle 'vim-scripts/Colour-Sampler-Pack'
-NeoBundle 'basyura/bitly.vim'
 NeoBundle 'basyura/TweetVim'
 NeoBundle 'basyura/twibill.vim'
 NeoBundle 'h1mesuke/unite-outline'
@@ -88,10 +84,8 @@ NeoBundle 'tyru/open-browser.vim'
 NeoBundle 'yomi322/neco-tweetvim'
 NeoBundle 'yomi322/unite-tweetvim'
 NeoBundle 'mattn/favstar-vim'
-NeoBundle 'thinca/vim-splash'
 NeoBundle 'vim-scripts/TeTrIs.vim'
 NeoBundle 'yuratomo/gmail.vim'
-NeoBundle 'supermomonga/shaberu.vim'
 NeoBundle 'tsukkee/lingr-vim'
 NeoBundle 'daisuzu/facebook.vim'
 NeoBundle 'koron/chalice'
@@ -100,7 +94,6 @@ NeoBundle 'tatsui/my-misc.vim'
 
 " init
 let OsType = system('uname')
-
 
 " Plugin key-mappings.
 imap <C-k> <Plug>(neosnippet_expand_or_jump)
@@ -114,7 +107,11 @@ smap <expr><TAB> neosnippet#expandable() <Bar><bar> neosnippet#jumpable() ? "\<P
 if has('conceal')
 	set conceallevel=2 concealcursor=i
 endif
-let g:neosnippet#snippets_directory='~/.vim/bundle/snipmate-snippets, ~/.vim/bundle/my-misc.vim/snippets'
+let g:neosnippet#snippets_directory='~/.vim/bundle/neosnippet-snippets, ~/.vim/bundle/my-misc.vim/snippets'
+" <TAB>: completion.                                         
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"   
+inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<S-TAB>" 
+
 
 " Use neocomplcache.
 let g:neocomplcache_enable_at_startup = 1
@@ -268,8 +265,7 @@ nnoremap <silent><Leader>w3 :<C-u>W3mTab google<CR>
 nnoremap <silent><Leader>2ch :tabe<CR>:Chalice<CR>
 nnoremap <silent><Leader>say :TweetVimSay<CR>
 nnoremap <silent><Leader>tag :!ctags -R<CR>
-nnoremap <silent><Leader>tw :call MyShaberuSay('starting twitter client.')
-			\<CR>:<C-u>tabnew <Bar> TweetVimUserStream<CR>
+nnoremap <silent><Leader>tw :<CR>:<C-u>tabnew <Bar> TweetVimUserStream<CR>
 nnoremap <silent><Leader>sh :<C-u>tabnew <Bar> VimShell<CR>
 nnoremap <silent> pp "0p<CR>
 vnoremap <silent> pp "0p<CR>
@@ -291,20 +287,6 @@ let g:sonictemplate_vim_template_dir = [
 
 " open-browser.vim
 nmap <silent><Leader>opb <Plug>(openbrowser-open)
-
-" w3m.vim
-highlight! link w3mLink Function
-highlight! link w3mLinkHover SpecialKey
-highlight! link w3mSubmit Special
-highlight! link w3mInput String
-highlight! link w3mBold Comment
-highlight! link w3mUnderline Underlined
-highlight! link w3mHitAHint Question
-highlight! link w3mAnchor Label
-let g:w3m#homepage = "http://www.google.co.jp/"
-let g:w3m#hit_a_hint_key = 'f'
-let g:w3m#lang='ja_JP.UTF-8'
-let g:w3m#external_browser='firefox'
 
 " easymotion
 " ホームポジションに近いキーを使う
@@ -408,30 +390,6 @@ endfunction
 function! MyMode()
 	return winwidth(0) > 60 ? lightline#mode() : ''
 endfunction
-
-" Shaberu-vim
-function! MyShaberuSay(text)
-	if g:OsType == "Darwin\n"
-		ShaberuSay a:text
-	endif
-endfunction
-let g:shaberu_user_define_say_command = 'say -v Victoria "%%TEXT%%"'
-" Vim core
-autocmd VimEnter * call MyShaberuSay('Hello my master?')
-" VimShell
-autocmd FileType vimshell
-\ call vimshell#hook#add('chpwd' , 'my_vimshell_chpwd' , 'g:my_vimshell_chpwd')
-\| call vimshell#hook#add('emptycmd', 'my_vimshell_emptycmd', 'g:my_vimshell_emptycmd')
-\| call vimshell#hook#add('notfound', 'my_vimshell_notfound', 'g:my_vimshell_notfound')
-function! g:my_vimshell_emptycmd(cmdline, context)
-	:call MyShaberuSay('Command is empty!')
-	return a:cmdline
-endfunction
-function! g:my_vimshell_notfound(cmdline, context)
-	:call MyShaberuSay('Command not found!')
-	return a:cmdline
-endfunction
-autocmd BufWritePost * call MyShaberuSay('I wrote buffer.')
 
 "\te テトリス起動
 source ~/.vim/bundle/TeTrIs.vim/plugin/tetris.vim
