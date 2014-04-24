@@ -1,14 +1,22 @@
 " install NeoBundle
-if !isdirectory(expand('~/.vim/bundle'))
-	!mkdir -p ~/.vim/bundle
-	!git clone https://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim
-	source ~/.vimrc
+if !isdirectory(expand($HOME.'/.vim/bundle'))
+	if has('win32')
+		!mkdir c:\Users\john\.vim
+		!mkdir c:\Users\john\.vim\bundle
+		!git clone https://github.com/Shougo/neobundle.vim c:\Users\john\.vim\bundle\neobundle.vim
+		source c:\Users\john\.vimrc
+	else
+		!mkdir $HMOE/.vim/
+		!mkdir $HOME/.vim/bundle
+		!git clone https://github.com/Shougo/neobundle.vim $HOME/.vim/bundle/neobundle.vim
+		source $HOME/.vimrc
+	endif
 	NeoBundleInstall
 	q
 endif
 if has('vim_starting')
 	set runtimepath+=~/.vim/bundle/neobundle.vim
-call neobundle#rc(expand('~/.vim/bundle'))
+	call neobundle#rc(expand($HOME.'/.vim/bundle'))
 endif
 
 " Neobundle.vim
@@ -17,6 +25,7 @@ endif
 NeoBundle 'Shougo/neocomplcache.vim'
 NeoBundle 'Shougo/neobundle.vim'
 NeoBundle 'Shougo/neosnippet'
+NeoBundle 'Shougo/neosnippet-snippets'
 NeoBundle 'Shougo/vimproc.vim'
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/vimfiler.vim'
@@ -34,23 +43,65 @@ NeoBundle 'mattn/zencoding-vim'
 NeoBundle 'mattn/gist-vim'
 NeoBundle 'mattn/webapi-vim'
 NeoBundle 'othree/eregex.vim'
-NeoBundle 'scrooloose/snipmate-snippets'
 NeoBundle 'git://gist.github.com/411828.git', {'directory': 'endtagcomment'}
+NeoBundle 'vim-scripts/LogViewer'
 NeoBundle 'scrooloose/nerdcommenter'
+NeoBundle 'gregsexton/gitv'
+NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'vim-scripts/YankRing.vim'
 NeoBundle 'vim-scripts/sudo.vim'
 NeoBundle 'mattn/sonictemplate-vim'
 NeoBundle 'scrooloose/syntastic'
+NeoBundle 'majutsushi/tagbar'
 NeoBundle 'thinca/vim-ref'
 NeoBundle 'itchyny/lightline.vim'
+"speed up
+NeoBundle 'Townk/vim-autoclose'
+NeoBundle 'Lokaltog/vim-easymotion'
+NeoBundle 't9md/vim-quickhl'
+NeoBundle 'jceb/vim-hier'
+"option
+NeoBundle 'mattn/excitetranslate-vim', {'depends': 'mattn/webapi-vim'} 
+NeoBundle 'vimtaku/vim-mlh'
+NeoBundle 'koron/dicwin-vim'
 "Language
+NeoBundle 'tpope/vim-markdown'
 NeoBundle 'vim-scripts/Pydiction'
 NeoBundle 'hail2u/vim-css3-syntax'
 NeoBundle 'cakebaker/scss-syntax.vim'
 NeoBundle 'jpo/vim-railscasts-theme'
+NeoBundle 'vim-ruby/vim-ruby'
 NeoBundle 'Shougo/neocomplcache-rsense.vim'
+NeoBundle 'rhysd/unite-ruby-require.vim'
+NeoBundle 'rhysd/neco-ruby-keyword-args'
+NeoBundle 'kchmck/vim-coffee-script'
+NeoBundle 'sophacles/vim-processing'
+NeoBundle 'yuratomo/java-api-javax'
+NeoBundle 'yuratomo/java-api-org'
+NeoBundle 'yuratomo/java-api-sun'
+NeoBundle 'yuratomo/java-api-servlet2.3'
+NeoBundle 'yuratomo/java-api-android'
+NeoBundle 'yuratomo/java-api-complete'
+NeoBundle 'sudar/vim-arduino-syntax'
+NeoBundle 'wannesm/wmgraphviz.vim'
 "other
 NeoBundle 'vim-scripts/Colour-Sampler-Pack'
+NeoBundle 'basyura/bitly.vim'
+NeoBundle 'basyura/TweetVim'
+NeoBundle 'basyura/twibill.vim'
 NeoBundle 'h1mesuke/unite-outline'
+NeoBundle 'tyru/open-browser.vim'
+NeoBundle 'yomi322/neco-tweetvim'
+NeoBundle 'yomi322/unite-tweetvim'
+NeoBundle 'mattn/favstar-vim'
+NeoBundle 'thinca/vim-splash'
+NeoBundle 'vim-scripts/TeTrIs.vim'
+NeoBundle 'yuratomo/gmail.vim'
+NeoBundle 'supermomonga/shaberu.vim'
+NeoBundle 'tsukkee/lingr-vim'
+NeoBundle 'daisuzu/facebook.vim'
+NeoBundle 'koron/chalice'
+NeoBundle 'vim-scripts/DrawIt'
 NeoBundle 'tatsui/my-misc.vim'
 
 " init
@@ -69,7 +120,7 @@ smap <expr><TAB> neosnippet#expandable() <Bar><bar> neosnippet#jumpable() ? "\<P
 if has('conceal')
 	set conceallevel=2 concealcursor=i
 endif
-let g:neosnippet#snippets_directory='~/.vim/bundle/snipmate-snippets, ~/.vim/bundle/my-misc.vim/snippets'
+let g:neosnippet#snippets_directory='~/.vim/bundle/neosnippet-snippets, ~/.vim/bundle/my-misc.vim/snippets'
 
 " Use neocomplcache.
 let g:neocomplcache_enable_at_startup = 1
@@ -187,7 +238,7 @@ function FileTypeJava()
 	"setl tags+=~/.vim/tags/android
 endfunction
 function FileTypePython()
-	let g:pydiction_location = '~/.vim/bundle/Pydiction/complete-dict'
+	let g:pydiction_location = $HOME.'/.vim/bundle/Pydiction/complete-dict'
 	let g:pydiction_menu_height = 20
 endfunction
 
@@ -219,7 +270,10 @@ xmap <Space>M <Plug>(quickhl-manual-reset)
 nnoremap <silent><Leader>1 :colorscheme inkpot<CR>
 nnoremap <silent><Leader>2 :call SetColorC2D()<CR>
 nnoremap <silent><Leader>3 :colorscheme lettuce<CR>
+nnoremap <silent><Leader>2ch :tabe<CR>:Chalice<CR>
+nnoremap <silent><Leader>say :TweetVimSay<CR>
 nnoremap <silent><Leader>tag :!ctags -R<CR>
+nnoremap <silent><Leader>tw <CR>:<C-u>tabnew <Bar> TweetVimUserStream<CR>
 nnoremap <silent><Leader>sh :<C-u>tabnew <Bar> VimShell<CR>
 nnoremap <silent> pp "0p<CR>
 vnoremap <silent> pp "0p<CR>
@@ -235,14 +289,45 @@ vmap ,, <Plug>NERDCommenterToggle
 "
 " sonictemplate
 let g:sonictemplate_vim_template_dir = [
-  \ '~/.vim/bundle/sonictemplate-vim/template',
-  \ '~/.vim/bundle/my-misc.vim/templates'
+  \ $HOME.'/.vim/bundle/sonictemplate-vim/template',
+  \ $HOME.'/.vim/bundle/my-misc.vim/templates'
   \]
 
+" open-browser.vim
+nmap <silent><Leader>opb <Plug>(openbrowser-open)
+
+" easymotion
+" ホームポジションに近いキーを使う
+let g:EasyMotion_keys='hjklasdfgyuiopqwertnmzxcvbHJKLASDFGYUIOPQWERTNMZXCVB'
+let g:EasyMotion_leader_key=";"
+let g:EasyMotion_grouping=1 " ストローク選択を優先する
+" カラー設定変更
+hi EasyMotionTarget ctermbg=none ctermfg=red
+hi EasyMotionShade ctermbg=none ctermfg=blue
 
 " vimshell
 let g:vimshell_prompt_expr = 'getcwd()." $ "'
 let g:vimshell_prompt_pattern = '^\f\+ $ '
+
+" YankRing.vim
+let g:yankring_history_dir = $HOME.'/.vim/'
+
+" tweetvim
+let g:tweetvim_tweet_per_page = 50
+let g:tweetvim_display_icon = 1
+let g:tweetvim_footer = ''
+let g:tweetvim_include_rts = 1
+let g:tweetvim_display_source = 1
+let g:tweetvim_display_username = 1
+let g:tweetvim_config_dir = expand($HOME.'/.vim_private/tweetvim')
+
+" Lingr.vim
+nnoremap <silent><Leader>lin :tabe<CR>:LingrLaunch<CR>
+
+" facebook.vim
+" need pip install fbconsole
+let g:facebook_access_token_file = expand($HOME.'/.vim_private/facebook.vim/fb_access_token')
+let g:facebook_timezone = '+0900'
 
 " QuickRun.vim
 let g:quickrun_config = {
@@ -314,6 +399,9 @@ function! MyMode()
 	return winwidth(0) > 60 ? lightline#mode() : ''
 endfunction
 
+"\te テトリス起動
+source ~/.vim/bundle/TeTrIs.vim/plugin/tetris.vim
+
 " 環境設定
 set autoindent
 set smartindent
@@ -382,6 +470,6 @@ augroup Binary
 	au BufWritePost * set nomod | endif
 augroup END
 
-if filereadable(expand('~/.vim_private/private_vimrc'))
+if filereadable(expand($HOME.'/.vim_private/private_vimrc'))
 	source ~/.vim_private/private_vimrc
 endif
