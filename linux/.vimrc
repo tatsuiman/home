@@ -75,6 +75,7 @@ NeoBundle 'yuratomo/java-api-servlet2.3'
 NeoBundle 'yuratomo/java-api-android'
 NeoBundle 'yuratomo/java-api-complete'
 NeoBundle 'wannesm/wmgraphviz.vim'
+NeoBundle 'elzr/vim-json'
 "other
 NeoBundle 'vim-scripts/Colour-Sampler-Pack'
 NeoBundle 'basyura/TweetVim'
@@ -265,6 +266,7 @@ nnoremap <silent><Leader>w3 :<C-u>W3mTab google<CR>
 nnoremap <silent><Leader>2ch :tabe<CR>:Chalice<CR>
 nnoremap <silent><Leader>say :TweetVimSay<CR>
 nnoremap <silent><Leader>tag :!ctags -R<CR>
+nnoremap <silent><Leader>json :%!python -m json.tool<CR>
 nnoremap <silent><Leader>tw :<CR>:<C-u>tabnew <Bar> TweetVimUserStream<CR>
 nnoremap <silent><Leader>sh :<C-u>tabnew <Bar> VimShell<CR>
 nnoremap <silent> pp "0p<CR>
@@ -327,6 +329,10 @@ let g:quickrun_config = {
 
 let g:quickrun_config['markdown'] = {
       \   'outputter': 'browser'
+      \ }
+let g:quickrun_config.json = {
+      \ 'command'   : 'jq',
+      \ 'exec'      : "%c '.' %s"
       \ }
 " vimfiler
 let g:vimfiler_safe_mode_by_default = 0
