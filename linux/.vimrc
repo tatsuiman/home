@@ -8,17 +8,28 @@ if !isdirectory(expand('~/.vim/bundle'))
 endif
 if has('vim_starting')
 	set runtimepath+=~/.vim/bundle/neobundle.vim
-call neobundle#rc(expand('~/.vim/bundle'))
+	call neobundle#begin(expand('~/.vim/bundle/'))
+	NeoBundleFetch 'Shougo/neobundle.vim'
+	call neobundle#end()
 endif
 
 " Neobundle.vim
 "
+call neobundle#begin(expand('~/.vim/bundle/'))
 " essential
 NeoBundle 'Shougo/neocomplcache'
 NeoBundle 'Shougo/neobundle'
 NeoBundle 'Shougo/neosnippet'
 NeoBundle 'Shougo/neosnippet-snippets'
-NeoBundle 'Shougo/vimproc.vim'
+NeoBundle 'Shougo/vimproc.vim', {
+\ 'build' : {
+\     'windows' : 'tools\\update-dll-mingw',
+\     'cygwin' : 'make -f make_cygwin.mak',
+\     'mac' : 'make -f make_mac.mak',
+\     'linux' : 'make',
+\     'unix' : 'gmake',
+\    },
+\ }
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/vimfiler.vim'
 NeoBundle 'Shougo/vimshell.vim'

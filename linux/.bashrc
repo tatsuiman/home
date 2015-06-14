@@ -123,7 +123,7 @@ export PATH=$PATH:$HOME/bin/android/sdk/tools
 #latex
 export PATH=$PATH:/usr/local/texlive/2012/bin/x86_64-linux
 #
-export PATH=$PATH:$HOME/bin:$HOME/bin/sh
+export PATH=$PATH:$HOME/bin:$HOME/bin/sh:$HOME/bin/python
 #xcompiler
 export PATH=$PATH:$HOME/bin/xcompiler/raspberrypi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin
 if [ -d $HOME/bin/tools ] ; then

@@ -8,17 +8,28 @@ if !isdirectory(expand('~/.vim/bundle'))
 endif
 if has('vim_starting')
 	set runtimepath+=~/.vim/bundle/neobundle.vim
-call neobundle#rc(expand('~/.vim/bundle'))
+	call neobundle#begin(expand('~/.vim/bundle/'))
+	NeoBundleFetch 'Shougo/neobundle.vim'
+	call neobundle#end()
 endif
 
 " Neobundle.vim
 "
+call neobundle#begin(expand('~/.vim/bundle/'))
 " essential
-NeoBundle 'Shougo/neocomplcache.vim'
-NeoBundle 'Shougo/neobundle.vim'
+NeoBundle 'Shougo/neocomplcache'
+NeoBundle 'Shougo/neobundle'
 NeoBundle 'Shougo/neosnippet'
 NeoBundle 'Shougo/neosnippet-snippets'
-NeoBundle 'Shougo/vimproc.vim'
+NeoBundle 'Shougo/vimproc.vim', {
+\ 'build' : {
+\     'windows' : 'tools\\update-dll-mingw',
+\     'cygwin' : 'make -f make_cygwin.mak',
+\     'mac' : 'make -f make_mac.mak',
+\     'linux' : 'make',
+\     'unix' : 'gmake',
+\    },
+\ }
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/vimfiler.vim'
 NeoBundle 'Shougo/vimshell.vim'
@@ -31,31 +42,37 @@ NeoBundle 'thinca/vim-quickrun'
 NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'vim-jp/vimdoc-ja'
 NeoBundle 'kana/vim-smartchr'
-NeoBundle 'mattn/zencoding-vim'
+NeoBundle 'mattn/emmet-vim'
 NeoBundle 'mattn/gist-vim'
 NeoBundle 'mattn/webapi-vim'
 NeoBundle 'othree/eregex.vim'
 NeoBundle 'git://gist.github.com/411828.git', {'directory': 'endtagcomment'}
+NeoBundle 'vim-scripts/LogViewer'
 NeoBundle 'scrooloose/nerdcommenter'
+NeoBundle 'gregsexton/gitv'
+NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'vim-scripts/YankRing.vim'
 NeoBundle 'vim-scripts/sudo.vim'
 NeoBundle 'mattn/sonictemplate-vim'
 NeoBundle 'scrooloose/syntastic'
+NeoBundle 'majutsushi/tagbar'
 NeoBundle 'thinca/vim-ref'
 NeoBundle 'itchyny/lightline.vim'
+NeoBundle 'rbtnn/rabbit-ui.vim'
+"speed up
+NeoBundle 'Townk/vim-autoclose'
+NeoBundle 'Lokaltog/vim-easymotion'
+NeoBundle 't9md/vim-quickhl'
+NeoBundle 'jceb/vim-hier'
+
 "Language
+NeoBundle 'tpope/vim-markdown'
 NeoBundle 'vim-scripts/Pydiction'
-NeoBundle 'hail2u/vim-css3-syntax'
-NeoBundle 'cakebaker/scss-syntax.vim'
-NeoBundle 'jpo/vim-railscasts-theme'
 NeoBundle 'Shougo/neocomplcache-rsense.vim'
-"other
-NeoBundle 'vim-scripts/Colour-Sampler-Pack'
-NeoBundle 'h1mesuke/unite-outline'
-NeoBundle 'tatsui/my-misc.vim'
+call neobundle#end()
 
 " init
 let OsType = system('uname')
-
 
 " Plugin key-mappings.
 imap <C-k> <Plug>(neosnippet_expand_or_jump)
@@ -70,6 +87,10 @@ if has('conceal')
 	set conceallevel=2 concealcursor=i
 endif
 let g:neosnippet#snippets_directory='~/.vim/bundle/neosnippet-snippets, ~/.vim/bundle/my-misc.vim/snippets'
+" <TAB>: completion.                                         
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"   
+inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<S-TAB>" 
+
 
 " Use neocomplcache.
 let g:neocomplcache_enable_at_startup = 1
@@ -216,10 +237,10 @@ xmap <Space>M <Plug>(quickhl-manual-reset)
 
 
 " Leader \
-nnoremap <silent><Leader>1 :colorscheme inkpot<CR>
-nnoremap <silent><Leader>2 :call SetColorC2D()<CR>
-nnoremap <silent><Leader>3 :colorscheme lettuce<CR>
+nnoremap <silent><Leader>w3 :<C-u>W3mTab google<CR>
 nnoremap <silent><Leader>tag :!ctags -R<CR>
+nnoremap <silent><Leader>json :%!python -m json.tool<CR>
+nnoremap <silent><Leader>tw :<CR>:<C-u>tabnew <Bar> TweetVimUserStream<CR>
 nnoremap <silent><Leader>sh :<C-u>tabnew <Bar> VimShell<CR>
 nnoremap <silent> pp "0p<CR>
 vnoremap <silent> pp "0p<CR>
@@ -239,10 +260,24 @@ let g:sonictemplate_vim_template_dir = [
   \ '~/.vim/bundle/my-misc.vim/templates'
   \]
 
+" open-browser.vim
+nmap <silent><Leader>opb <Plug>(openbrowser-open)
+
+" easymotion
+" ホームポジションに近いキーを使う
+let g:EasyMotion_keys='hjklasdfgyuiopqwertnmzxcvbHJKLASDFGYUIOPQWERTNMZXCVB'
+let g:EasyMotion_leader_key=";"
+let g:EasyMotion_grouping=1 " ストローク選択を優先する
+" カラー設定変更
+hi EasyMotionTarget ctermbg=none ctermfg=red
+hi EasyMotionShade ctermbg=none ctermfg=blue
 
 " vimshell
 let g:vimshell_prompt_expr = 'getcwd()." $ "'
 let g:vimshell_prompt_pattern = '^\f\+ $ '
+
+" YankRing.vim
+let g:yankring_history_dir = '~/.vim/'
 
 " QuickRun.vim
 let g:quickrun_config = {
@@ -250,6 +285,10 @@ let g:quickrun_config = {
 
 let g:quickrun_config['markdown'] = {
       \   'outputter': 'browser'
+      \ }
+let g:quickrun_config.json = {
+      \ 'command'   : 'jq',
+      \ 'exec'      : "%c '.' %s"
       \ }
 " vimfiler
 let g:vimfiler_safe_mode_by_default = 0
@@ -344,33 +383,11 @@ set display=lastline
 set clipboard=unnamedplus,unnamed,autoselect
 set nobackup
 set nocursorline
+set noexpandtab
+retab 4
 au InsertEnter,InsertLeave * set cursorline!
 filetype plugin indent on 
 syntax on
-" カラーを設定
-function SetColorC2D()
-	set t_Co=256
-	colorscheme calmar256-dark
-	hi clear Pmenu
-	hi clear PmenuSel
-	hi clear PmenuSbar
-	hi clear PmenuThumb
-	if !has("gui_running")
-		hi Pmenu ctermbg=22 ctermfg=15
-		hi PmenuSel ctermbg=1
-		hi PmenuSbar ctermbg=0
-		hi PmenuThumb ctermbg=15
-	else
-		hi Pmenu guibg=darkgreen guifg=white
-		hi PmenuSel guibg=red guifg=green
-		hi PmenuSbar guibg=#333333
-		hi PmenuThumb guibg=white
-	endif
-	hi ZenkakuSpace cterm=underline ctermfg=lightblue guibg=darkgray
-	match ZenkakuSpace /　/ "全角スペースの表示
-endfunction
-call SetColorC2D()
-
 "バイナリ編集(xxd)モード（vim -b での起動、もしくは *.bin ファイルを開くと発動します）
 augroup Binary
 	au!
@@ -381,7 +398,3 @@ augroup Binary
 	au BufWritePost * if &bin | silent %!xxd -g 1
 	au BufWritePost * set nomod | endif
 augroup END
-
-if filereadable(expand('~/.vim_private/private_vimrc'))
-	source ~/.vim_private/private_vimrc
-endif
