@@ -69,6 +69,15 @@ NeoBundle 'jceb/vim-hier'
 NeoBundle 'tpope/vim-markdown'
 NeoBundle 'vim-scripts/Pydiction'
 NeoBundle 'Shougo/neocomplcache-rsense.vim'
+
+"Other
+NeoBundle 'h1mesuke/unite-outline'
+NeoBundle 'vim-scripts/DrawIt'
+NeoBundle 'tatsui/my-misc.vim'
+
+"play
+NeoBundle 'vim-scripts/TeTrIs.vim'
+
 call neobundle#end()
 
 " init

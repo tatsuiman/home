@@ -111,28 +111,25 @@ history -r
 PROMPT_COMMAND='share_history'
 shopt -u histappend
 stty stop undef
-#################add PATH##################
-#JDK
-#export JAVA_HOME=/usr/local/java/jdk1.7.0_17
-#export PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin
-#export JRE_HOME=/usr/local/java/jre1.7.0_07
-#android
-export PATH=$PATH:/usr/local/sbin
-export PATH=$PATH:$HOME/bin/android/sdk/platform-tools
-export PATH=$PATH:$HOME/bin/android/sdk/tools
-#latex
-export PATH=$PATH:/usr/local/texlive/2012/bin/x86_64-linux
-#
-export PATH=$PATH:$HOME/bin:$HOME/bin/sh:$HOME/bin/python
-#xcompiler
-export PATH=$PATH:$HOME/bin/xcompiler/raspberrypi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin
+
+
+################# add PATH ##################
+export PATH=`echo $PATH | tr ':' '\n' | sort -u | paste -d: -s -`;
+# Java
+#export JAVA_HOME=/usr/lib/jvm/java-7-oracle/jre/
+#export JRE_HOME=$HOME/bin/java/jre
+#export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH
+# bin
+export PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/sbin
+export PATH=$PATH:$HOME/bin:$HOME/bin/sh:$HOME/bin/python:$HOME/bin/perl
+# tools
 if [ -d $HOME/bin/tools ] ; then
 	for i in `ls $HOME/bin/tools/`
 	do
 		export PATH=$PATH:$HOME/bin/tools/$i
 	done
 fi
-#################add PATH##################
+################# add PATH ##################
 
 if [ `uname` = "Darwin" ]; then
 	alias ls='ls -G'
@@ -144,14 +141,12 @@ elif [ `uname` = "Linux" ]; then
 	esac
 fi
 
-#alias
-alias vi="vim"
+# alias
 alias nkf.utf8='nkf -w --overwrite'
 alias nkf.sjis='nkf -s --overwrite'
-alias vim.ide='vim -c "VimFiler -buffer-name=explorer -split -winwidth=30 -toggle -no-quit" -c "QuickRun" -c "TagbarToggle"'
-alias gvim.ide='gvim -c "VimFiler -buffer-name=explorer -split -winwidth=30 -toggle -no-quit" -c "QuickRun" -c "TagbarToggle"'
-alias vim.full='vim -c "VimFiler -buffer-name=explorer -split -winwidth=30 -toggle -no-quit" -c "QuickRun" -c "TagbarToggle" -c "tabe" -c "TweetVimUserStream" -c "tabe" -c "W3m google 2ch"'
-alias gvim.full='gvim -c "VimFiler -buffer-name=explorer -split -winwidth=30 -toggle -no-quit" -c "QuickRun" -c "TagbarToggle" -c "tabe" -c "TweetVimUserStream" -c "tabe" -c "W3m google 2ch"'
 alias objdump='objdump -M intel'
 alias shutdown.now='sudo shutdown -h now'
+alias w3m.tor='torsocks w3m https://www.google.co.jp'
 alias w3m.home='w3m https://www.google.co.jp'
+alias vi='vim -u NONE --noplugin'
+alias xxd='xxd -g 1'

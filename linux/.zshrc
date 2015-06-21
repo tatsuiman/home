@@ -82,27 +82,24 @@ source $ZSH/oh-my-zsh.sh
 
 # Customize to your needs...
 
+################# add PATH ##################
 typeset -U path PATH
-# export ENV
-# java
-export JAVA_HOME=/usr/lib/jvm/java-7-oracle/jre/
-export JRE_HOME=$HOME/bin/java/jre
-export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH
-# android
-export PATH=$PATH:/opt/android/sdk/platform-tools
-export PATH=$PATH:/opt/android/sdk/tools
-# usr
+# Java
+#export JAVA_HOME=/usr/lib/jvm/java-7-oracle/jre/
+#export JRE_HOME=$HOME/bin/java/jre
+#export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH
+# bin
 export PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/sbin
-# home
 export PATH=$PATH:$HOME/bin:$HOME/bin/sh:$HOME/bin/python:$HOME/bin/perl
-# misc tools
+# tools
 if [ -d $HOME/bin/tools ] ; then
 	for i in `ls $HOME/bin/tools/`
 	do
 		export PATH=$PATH:$HOME/bin/tools/$i
 	done
 fi
-# OS
+################# add PATH ##################
+
 if [ `uname` = "Darwin" ]; then
 	alias ls='ls -G'
 elif [ `uname` = "Linux" ]; then
@@ -119,5 +116,6 @@ alias nkf.sjis='nkf -s --overwrite'
 alias objdump='objdump -M intel'
 alias shutdown.now='sudo shutdown -h now'
 alias w3m.tor='torsocks w3m https://www.google.co.jp'
+alias w3m.home='w3m https://www.google.co.jp'
 alias vi='vim -u NONE --noplugin'
 alias xxd='xxd -g 1'
