@@ -1,3 +1,6 @@
+if [ ! -d ".oh-my-zsh" ];then
+	git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
+fi
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 
@@ -82,13 +85,8 @@ source $ZSH/oh-my-zsh.sh
 
 # Customize to your needs...
 
-################# add PATH ##################
+# Add PATH
 typeset -U path PATH
-# Java
-#export JAVA_HOME=/usr/lib/jvm/java-7-oracle/jre/
-#export JRE_HOME=$HOME/bin/java/jre
-#export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH
-# bin
 export PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/sbin
 export PATH=$PATH:$HOME/bin:$HOME/bin/sh:$HOME/bin/python:$HOME/bin/perl
 # tools
@@ -98,8 +96,7 @@ if [ -d $HOME/bin/tools ] ; then
 		export PATH=$PATH:$HOME/bin/tools/$i
 	done
 fi
-################# add PATH ##################
-
+# OS Settings
 if [ `uname` = "Darwin" ]; then
 	alias ls='ls -G'
 elif [ `uname` = "Linux" ]; then
@@ -109,7 +106,7 @@ elif [ `uname` = "Linux" ]; then
 	*) LANG=ja_JP.UTF-8 ;;
 	esac
 fi
-
+umask 077
 # alias
 alias nkf.utf8='nkf -w --overwrite'
 alias nkf.sjis='nkf -s --overwrite'

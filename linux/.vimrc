@@ -42,7 +42,7 @@ NeoBundle 'thinca/vim-quickrun'
 NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'vim-jp/vimdoc-ja'
 NeoBundle 'kana/vim-smartchr'
-NeoBundle 'mattn/zencoding-vim'
+NeoBundle 'mattn/emmet-vim'
 NeoBundle 'mattn/gist-vim'
 NeoBundle 'mattn/webapi-vim'
 NeoBundle 'othree/eregex.vim'
@@ -58,51 +58,29 @@ NeoBundle 'scrooloose/syntastic'
 NeoBundle 'majutsushi/tagbar'
 NeoBundle 'thinca/vim-ref'
 NeoBundle 'itchyny/lightline.vim'
+NeoBundle 'rbtnn/rabbit-ui.vim'
 "speed up
 NeoBundle 'Townk/vim-autoclose'
 NeoBundle 'Lokaltog/vim-easymotion'
 NeoBundle 't9md/vim-quickhl'
 NeoBundle 'jceb/vim-hier'
-"option
-NeoBundle 'mattn/excitetranslate-vim', {'depends': 'mattn/webapi-vim'} 
-NeoBundle 'vimtaku/vim-mlh'
-NeoBundle 'koron/dicwin-vim'
+
 "Language
 NeoBundle 'tpope/vim-markdown'
 NeoBundle 'vim-scripts/Pydiction'
-NeoBundle 'hail2u/vim-css3-syntax'
-NeoBundle 'cakebaker/scss-syntax.vim'
-NeoBundle 'jpo/vim-railscasts-theme'
-NeoBundle 'vim-ruby/vim-ruby'
 NeoBundle 'Shougo/neocomplcache-rsense.vim'
-NeoBundle 'rhysd/unite-ruby-require.vim'
-NeoBundle 'rhysd/neco-ruby-keyword-args'
-NeoBundle 'kchmck/vim-coffee-script'
-NeoBundle 'yuratomo/java-api-complete'
-NeoBundle 'yuratomo/java-api-javax'
-NeoBundle 'yuratomo/java-api-org'
-NeoBundle 'yuratomo/java-api-sun'
-NeoBundle 'yuratomo/java-api-servlet2.3'
-NeoBundle 'yuratomo/java-api-android'
-NeoBundle 'yuratomo/java-api-complete'
-NeoBundle 'wannesm/wmgraphviz.vim'
-NeoBundle 'elzr/vim-json'
-"other
-NeoBundle 'vim-scripts/Colour-Sampler-Pack'
-NeoBundle 'basyura/TweetVim'
-NeoBundle 'basyura/twibill.vim'
+
+"Other
+
+NeoBundle 'Shougo/vinarise'
 NeoBundle 'h1mesuke/unite-outline'
-NeoBundle 'tyru/open-browser.vim'
-NeoBundle 'yomi322/neco-tweetvim'
-NeoBundle 'yomi322/unite-tweetvim'
-NeoBundle 'mattn/favstar-vim'
-NeoBundle 'vim-scripts/TeTrIs.vim'
-NeoBundle 'yuratomo/gmail.vim'
-NeoBundle 'tsukkee/lingr-vim'
-NeoBundle 'daisuzu/facebook.vim'
-NeoBundle 'koron/chalice'
 NeoBundle 'vim-scripts/DrawIt'
 NeoBundle 'tatsui/my-misc.vim'
+
+"play
+NeoBundle 'vim-scripts/TeTrIs.vim'
+
+call neobundle#end()
 
 " init
 let OsType = system('uname')
@@ -270,12 +248,7 @@ xmap <Space>M <Plug>(quickhl-manual-reset)
 
 
 " Leader \
-nnoremap <silent><Leader>1 :colorscheme inkpot<CR>
-nnoremap <silent><Leader>2 :call SetColorC2D()<CR>
-nnoremap <silent><Leader>3 :colorscheme lettuce<CR>
 nnoremap <silent><Leader>w3 :<C-u>W3mTab google<CR>
-nnoremap <silent><Leader>2ch :tabe<CR>:Chalice<CR>
-nnoremap <silent><Leader>say :TweetVimSay<CR>
 nnoremap <silent><Leader>tag :!ctags -R<CR>
 nnoremap <silent><Leader>json :%!python -m json.tool<CR>
 nnoremap <silent><Leader>tw :<CR>:<C-u>tabnew <Bar> TweetVimUserStream<CR>
@@ -316,23 +289,6 @@ let g:vimshell_prompt_pattern = '^\f\+ $ '
 
 " YankRing.vim
 let g:yankring_history_dir = '~/.vim/'
-
-" tweetvim
-let g:tweetvim_tweet_per_page = 50
-let g:tweetvim_display_icon = 1
-let g:tweetvim_footer = ''
-let g:tweetvim_include_rts = 1
-let g:tweetvim_display_source = 1
-let g:tweetvim_display_username = 1
-let g:tweetvim_config_dir = expand('~/.vim_private/tweetvim')
-
-" Lingr.vim
-nnoremap <silent><Leader>lin :tabe<CR>:LingrLaunch<CR>
-
-" facebook.vim
-" need pip install fbconsole
-let g:facebook_access_token_file = expand('~/.vim_private/facebook.vim/fb_access_token')
-let g:facebook_timezone = '+0900'
 
 " QuickRun.vim
 let g:quickrun_config = {
@@ -408,9 +364,6 @@ function! MyMode()
 	return winwidth(0) > 60 ? lightline#mode() : ''
 endfunction
 
-"\te テトリス起動
-source ~/.vim/bundle/TeTrIs.vim/plugin/tetris.vim
-
 " 環境設定
 set autoindent
 set smartindent
@@ -441,44 +394,17 @@ set display=lastline
 set clipboard=unnamedplus,unnamed,autoselect
 set nobackup
 set nocursorline
+set noexpandtab
+set hlsearch
+retab 4
 au InsertEnter,InsertLeave * set cursorline!
 filetype plugin indent on 
 syntax on
-" カラーを設定
-function SetColorC2D()
-	set t_Co=256
-	colorscheme calmar256-dark
-	hi clear Pmenu
-	hi clear PmenuSel
-	hi clear PmenuSbar
-	hi clear PmenuThumb
-	if !has("gui_running")
-		hi Pmenu ctermbg=22 ctermfg=15
-		hi PmenuSel ctermbg=1
-		hi PmenuSbar ctermbg=0
-		hi PmenuThumb ctermbg=15
-	else
-		hi Pmenu guibg=darkgreen guifg=white
-		hi PmenuSel guibg=red guifg=green
-		hi PmenuSbar guibg=#333333
-		hi PmenuThumb guibg=white
-	endif
-	hi ZenkakuSpace cterm=underline ctermfg=lightblue guibg=darkgray
-	match ZenkakuSpace /　/ "全角スペースの表示
-endfunction
-call SetColorC2D()
-
-"バイナリ編集(xxd)モード（vim -b での起動、もしくは *.bin ファイルを開くと発動します）
-augroup Binary
-	au!
-	au BufReadPre	*.bin let &bin=1
-	au BufReadPost * if &bin | silent %!xxd -g 1
-	au BufReadPost * set filetype=xxd | endif
-	au BufWritePre * if &bin | %!xxd -r
-	au BufWritePost * if &bin | silent %!xxd -g 1
-	au BufWritePost * set nomod | endif
+"バイナリ編集モード（vim -b での起動、もしくは *.bin ファイルを開くと発動します）
+augroup BinaryXXD
+	autocmd!
+	autocmd BufReadPre  *.bin let &binary =1
+	autocmd BufReadPost * if &bin | Vinarise
+	autocmd BufWritePre * if &bin | Vinarise | endif
+	autocmd BufWritePost * if &bin | Vinarise 
 augroup END
-
-if filereadable(expand('~/.vim_private/private_vimrc'))
-	source ~/.vim_private/private_vimrc
-endif

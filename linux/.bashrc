@@ -112,14 +112,8 @@ PROMPT_COMMAND='share_history'
 shopt -u histappend
 stty stop undef
 
-
-################# add PATH ##################
-export PATH=`echo $PATH | tr ':' '\n' | sort -u | paste -d: -s -`;
-# Java
-#export JAVA_HOME=/usr/lib/jvm/java-7-oracle/jre/
-#export JRE_HOME=$HOME/bin/java/jre
-#export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH
-# bin
+# Add PATH
+typeset -U path PATH
 export PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/sbin
 export PATH=$PATH:$HOME/bin:$HOME/bin/sh:$HOME/bin/python:$HOME/bin/perl
 # tools
@@ -129,8 +123,7 @@ if [ -d $HOME/bin/tools ] ; then
 		export PATH=$PATH:$HOME/bin/tools/$i
 	done
 fi
-################# add PATH ##################
-
+# OS Settings
 if [ `uname` = "Darwin" ]; then
 	alias ls='ls -G'
 elif [ `uname` = "Linux" ]; then
@@ -140,7 +133,7 @@ elif [ `uname` = "Linux" ]; then
 	*) LANG=ja_JP.UTF-8 ;;
 	esac
 fi
-
+umask 077
 # alias
 alias nkf.utf8='nkf -w --overwrite'
 alias nkf.sjis='nkf -s --overwrite'
