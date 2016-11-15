@@ -1,118 +1,86 @@
-if [ ! -d ".oh-my-zsh" ];then
-	git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
+#!/usr/bin/zsh
+
+if [[ ! -d ${HOME}/.zplug  ]]; then
+	curl -sL zplug.sh/installer | zsh
+    source ~/.zplug/init.zsh && zplug update --self
+else
+    source ~/.zplug/init.zsh
 fi
-# Path to your oh-my-zsh installation.
-export ZSH=$HOME/.oh-my-zsh
 
-# Set name of the theme to load.
-# Look in ~/.oh-my-zsh/themes/
-# Optionally, if you set this to "random", it'll load a random theme each
-# time that oh-my-zsh is loaded.
-#ZSH_THEME="rkj-repos"
-ZSH_THEME="tjkirch"
+# 変更した時自動でコンパイル
+if [ ${HOME}/.zshrc -nt ${HOME}/.zshrc.zwc ]; then
+  zcompile ~/.zshrc
+fi
 
-# Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
+HISTFILE=~/.zsh_history
+HISTSIZE=1000000
+SAVEHIST=100000
 
-# Uncomment the following line to disable bi-weekly auto-update checks.
-# DISABLE_AUTO_UPDATE="true"
+export LSCOLORS=ExfxcxdxbxGxDxabagacad
+zstyle ':completion:*' list-colors ${LSCOLORS}
+zstyle ':completion:*:default' menu select=2
 
-# Uncomment the following line to change how often to auto-update (in days).
-# export UPDATE_ZSH_DAYS=13
+# Rename fzf-bin to fzf
+zplug "junegunn/fzf-bin", from:gh-r, as:command, rename-to:fzf
 
-# Uncomment the following line to disable colors in ls.
-# DISABLE_LS_COLORS="true"
+#zplug "plugins/pip", from:oh-my-zsh
+#zplug "plugins/autojump", from:oh-my-zsh
 
-# Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
+zplug "lib/theme-and-appearance", from:oh-my-zsh
+#zplug "lib/key-bindings", from:oh-my-zsh
+zplug "lib/history", from:oh-my-zsh
+zplug "psprint/history-search-multi-word"
+bindkey "^R" history-search-multi-word
 
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
+zplug "zsh-users/zsh-syntax-highlighting"
+zplug "zsh-users/zsh-completions"
+zplug "zsh-users/zsh-autosuggestions"
+bindkey '^ ' autosuggest-accept
 
-# Uncomment the following line to display red dots whilst waiting for completion.
-# COMPLETION_WAITING_DOTS="true"
+#zplug "themes/mh", from:oh-my-zsh
+zplug "themes/tjkirch", from:oh-my-zsh
 
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
 
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# HIST_STAMPS="mm/dd/yyyy"
+# Install plugins if there are plugins that have not been installed
+if ! zplug check --verbose; then
+	printf "Install? [y/N]: "
+	if read -q; then
+		echo; zplug install
+	fi
+fi
 
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
-
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
-
-source $ZSH/oh-my-zsh.sh
-
-# User configuration
-
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
-
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
-# ssh
-# export SSH_KEY_PATH="~/.ssh/dsa_id"
-
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
+# Then, source plugins and add commands to $PATH
+zplug load --verbose
+#eval "$(fasd --init auto)"
 #
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-#
-
-# Customize to your needs...
-
+umask 0002
 # Add PATH
 typeset -U path PATH
-export PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/sbin
 export PATH=$PATH:$HOME/bin:$HOME/bin/sh:$HOME/bin/python:$HOME/bin/perl
-# tools
-if [ -d $HOME/bin/tools ] ; then
-	for i in `ls $HOME/bin/tools/`
+
+if [ -d $HOME/bin/pentest/network ] ; then
+	for i in `ls $HOME/bin/pentest/network/`
 	do
-		export PATH=$PATH:$HOME/bin/tools/$i
+		export PATH=$PATH:$HOME/bin/pentest/network/$i
 	done
 fi
+
 # OS Settings
 if [ `uname` = "Darwin" ]; then
-	alias ls='ls -G'
+        alias ls='ls -G'
 elif [ `uname` = "Linux" ]; then
-	#server
-	case $TERM in
-	linux) LANG=C ;;
-	*) LANG=ja_JP.UTF-8 ;;
-	esac
+        #server
+        case $TERM in
+        linux) LANG=C ;;
+        *) LANG=ja_JP.UTF-8 ;;
+        esac
 fi
-umask 077
+
 # alias
 alias nkf.utf8='nkf -w --overwrite'
 alias nkf.sjis='nkf -s --overwrite'
 alias objdump='objdump -M intel'
-alias shutdown.now='sudo shutdown -h now'
-alias w3m.tor='torsocks w3m https://www.google.co.jp'
-alias w3m.home='w3m https://www.google.co.jp'
-alias vi='vim -u NONE --noplugin'
 alias xxd='xxd -g 1'
+alias vi='vim -u NONE --noplugin'
+alias pip='pip --proxy $HTTP_PROXY'
+alias pip3='pip3 --proxy $HTTP_PROXY'
