@@ -1,7 +1,7 @@
 #!/usr/bin/zsh
 
 if [[ ! -d ${HOME}/.zplug  ]]; then
-	curl -sL zplug.sh/installer | zsh
+	curl -sL https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
     source ~/.zplug/init.zsh && zplug update --self
 else
     source ~/.zplug/init.zsh
@@ -50,7 +50,7 @@ if ! zplug check --verbose; then
 fi
 
 # Then, source plugins and add commands to $PATH
-zplug load --verbose
+zplug load
 #eval "$(fasd --init auto)"
 #
 umask 0002
