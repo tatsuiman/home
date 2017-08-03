@@ -40,13 +40,11 @@ NeoBundle 'ujihisa/unite-colorscheme'
 NeoBundle 'ujihisa/vimshell-ssh'
 NeoBundle 'thinca/vim-quickrun'
 NeoBundle 'altercation/vim-colors-solarized'
-NeoBundle 'vim-jp/vimdoc-ja'
 NeoBundle 'kana/vim-smartchr'
 NeoBundle 'mattn/emmet-vim'
 NeoBundle 'mattn/gist-vim'
 NeoBundle 'mattn/webapi-vim'
 NeoBundle 'othree/eregex.vim'
-NeoBundle 'git://gist.github.com/411828.git', {'directory': 'endtagcomment'}
 NeoBundle 'vim-scripts/LogViewer'
 NeoBundle 'scrooloose/nerdcommenter'
 NeoBundle 'gregsexton/gitv'
@@ -66,19 +64,9 @@ NeoBundle 't9md/vim-quickhl'
 NeoBundle 'jceb/vim-hier'
 
 "Language
-NeoBundle 'tpope/vim-markdown'
 NeoBundle 'vim-scripts/Pydiction'
 NeoBundle 'Shougo/neocomplcache-rsense.vim'
 
-"Other
-
-NeoBundle 'Shougo/vinarise'
-NeoBundle 'h1mesuke/unite-outline'
-NeoBundle 'vim-scripts/DrawIt'
-NeoBundle 'tatsui/my-misc.vim'
-
-"play
-NeoBundle 'vim-scripts/TeTrIs.vim'
 
 call neobundle#end()
 
@@ -303,8 +291,8 @@ let g:quickrun_config.json = {
       \ }
 " vimfiler
 let g:vimfiler_safe_mode_by_default = 0
-au! FileType vimfiler call g:my_vimfiler_settings()
-function! g:my_vimfiler_settings()
+au! FileType vimfiler call s:my_vimfiler_settings()
+function! s:my_vimfiler_settings()
 	nnoremap <buffer><expr><Cr> vimfiler#smart_cursor_map("\<Plug>(vimfiler_expand_tree)", "\<Plug>(vimfiler_edit_file)")
 	nnoremap <buffer>s :call vimfiler#mappings#do_action('my_split')<Cr>
 	nnoremap <buffer>v :call vimfiler#mappings#do_action('my_vsplit')<Cr>

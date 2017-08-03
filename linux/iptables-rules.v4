@@ -1,0 +1,160 @@
+*filter
+:INPUT DROP [1:40]
+:FORWARD DROP [0:0]
+:OUTPUT ACCEPT [109:15386]
+:STEALTH_SCAN - [0:0]
+:PING_OF_DEATH - [0:0]
+:SYN_FLOOD - [0:0]
+:HTTP_DOS - [0:0]
+-A INPUT -p icmp -m icmp --icmp-type 8 -j ACCEPT
+-A INPUT -p icmp -m icmp --icmp-type 0 -j ACCEPT
+-A INPUT -p tcp -m tcp --dport 22 -j ACCEPT
+-A INPUT -p udp -m udp --sport 53 -j ACCEPT
+# for samba
+-A INPUT -p tcp --dport 139 -j ACCEPT
+-A INPUT -p udp --dport 137 -j ACCEPT
+-A INPUT -p udp --dport 138 -j ACCEPT
+-A INPUT -p tcp --dport 445 -j ACCEPT
+# for localhost
+-A INPUT -i lo -j ACCEPT
+
+###########################################################
+# セッション確立後のパケット疎通は許可
+###########################################################
+-A INPUT -p tcp -m state --state RELATED,ESTABLISHED -j ACCEPT
+
+
+###########################################################
+# 攻撃対策: Stealth Scan
+###########################################################
+-A STEALTH_SCAN -j LOG --log-prefix "stealth_scan_attack: "
+-A STEALTH_SCAN -j DROP
+
+# ステルススキャンらしきパケットは "STEALTH_SCAN" チェーンへジャンプする
+-A INPUT -p tcp --tcp-flags SYN,ACK SYN,ACK -m state --state NEW -j STEALTH_SCAN
+-A INPUT -p tcp --tcp-flags ALL NONE -j STEALTH_SCAN
+
+-A INPUT -p tcp --tcp-flags SYN,FIN SYN,FIN         -j STEALTH_SCAN
+-A INPUT -p tcp --tcp-flags SYN,RST SYN,RST         -j STEALTH_SCAN
+-A INPUT -p tcp --tcp-flags ALL SYN,RST,ACK,FIN,URG -j STEALTH_SCAN
+
+-A INPUT -p tcp --tcp-flags FIN,RST FIN,RST -j STEALTH_SCAN
+-A INPUT -p tcp --tcp-flags ACK,FIN FIN     -j STEALTH_SCAN
+-A INPUT -p tcp --tcp-flags ACK,PSH PSH     -j STEALTH_SCAN
+-A INPUT -p tcp --tcp-flags ACK,URG URG     -j STEALTH_SCAN
+
+
+###########################################################
+# 攻撃対策: フラグメントパケットによるポートスキャン,DOS攻撃
+# namap -v -sF などの対策
+###########################################################
+-A INPUT -f -j LOG --log-prefix 'fragment_packet:'
+-A INPUT -f -j DROP
+
+###########################################################
+# 攻撃対策: Ping of Death
+###########################################################
+# 毎秒1回を超えるpingが10回続いたら破棄
+-A PING_OF_DEATH -p icmp --icmp-type echo-request -m hashlimit --hashlimit 1/s --hashlimit-burst 10 --hashlimit-htable-expire 300000 --hashlimit-mode srcip --hashlimit-name t_PING_OF_DEATH -j RETURN
+
+# 制限を超えたICMPを破棄
+-A PING_OF_DEATH -j LOG --log-prefix "ping_of_death_attack: "
+-A PING_OF_DEATH -j DROP
+
+# ICMP は "PING_OF_DEATH" チェーンへジャンプ
+-A INPUT -p icmp --icmp-type echo-request -j PING_OF_DEATH
+
+###########################################################
+# 攻撃対策: SYN Flood Attack
+# この対策に加えて Syn Cookie を有効にすべし。
+###########################################################
+-A SYN_FLOOD -p tcp --syn -m hashlimit --hashlimit 200/s --hashlimit-burst 3 --hashlimit-htable-expire 300000 --hashlimit-mode srcip --hashlimit-name t_SYN_FLOOD -j RETURN
+
+# 解説
+# -m hashlimit                       ホストごとに制限するため limit ではなく hashlimit を利用する
+# --hashlimit 200/s                  秒間に200接続を上限にする
+# --hashlimit-burst 3                上記の上限を超えた接続が3回連続であれば制限がかかる
+# --hashlimit-htable-expire 300000   管理テーブル中のレコードの有効期間（単位：ms
+# --hashlimit-mode srcip             送信元アドレスでリクエスト数を管理する
+# --hashlimit-name t_SYN_FLOOD       /proc/net/ipt_hashlimit に保存されるハッシュテーブル名
+# -j RETURN                          制限以内であれば、親チェーンに戻る
+
+# 制限を超えたSYNパケットを破棄
+-A SYN_FLOOD -j LOG --log-prefix "syn_flood_attack: "
+-A SYN_FLOOD -j DROP
+
+# SYNパケットは "SYN_FLOOD" チェーンへジャンプ
+-A INPUT -p tcp --syn -j SYN_FLOOD
+
+###########################################################
+# 攻撃対策: HTTP DoS/DDoS Attack
+###########################################################
+-A HTTP_DOS -p tcp -m multiport --dports 80,443 -m hashlimit --hashlimit 1/s --hashlimit-burst 100 --hashlimit-htable-expire 300000 --hashlimit-mode srcip --hashlimit-name t_HTTP_DOS -j RETURN
+
+# 解説
+# -m hashlimit                       ホストごとに制限するため limit ではなく hashlimit を利用する
+# --hashlimit 1/s                    秒間1接続を上限とする
+# --hashlimit-burst 100              上記の上限を100回連続で超えると制限がかかる
+# --hashlimit-htable-expire 300000   管理テーブル中のレコードの有効期間（単位：ms
+# --hashlimit-mode srcip             送信元アドレスでリクエスト数を管理する
+# --hashlimit-name t_HTTP_DOS        /proc/net/ipt_hashlimit に保存されるハッシュテーブル名
+# -j RETURN                          制限以内であれば、親チェーンに戻る
+
+# 制限を超えた接続を破棄
+-A HTTP_DOS -j LOG --log-prefix "http_dos_attack: "
+-A HTTP_DOS -j DROP
+
+# HTTPへのパケットは "HTTP_DOS" チェーンへジャンプ
+-A INPUT -p tcp -m multiport --dports 80,443 -j HTTP_DOS
+
+###########################################################
+# 攻撃対策: IDENT port probe
+# identを利用し攻撃者が将来の攻撃に備えるため、あるいはユーザーの
+# システムが攻撃しやすいかどうかを確認するために、ポート調査を実行
+# する可能性があります。
+# DROP ではメールサーバ等のレスポンス低下になるため REJECTする
+###########################################################
+-A INPUT -p tcp -m multiport --dports 113 -j REJECT --reject-with tcp-reset
+
+###########################################################
+# 攻撃対策: SSH Brute Force
+# SSHはパスワード認証を利用しているサーバの場合、パスワード総当り攻撃に備える。
+# 1分間に5回しか接続トライをできないようにする。
+# SSHクライアント側が再接続を繰り返すのを防ぐためDROPではなくREJECTにする。
+# SSHサーバがパスワード認証ONの場合、以下をアンコメントアウトする
+###########################################################
+-A INPUT -p tcp --syn -m multiport --dports 22 -m recent --name ssh_attack --set
+-A INPUT -p tcp --syn -m multiport --dports 22 -m recent --name ssh_attack --rcheck --seconds 60 --hitcount 5 -j LOG --log-prefix "ssh_brute_force: "
+-A INPUT -p tcp --syn -m multiport --dports 22 -m recent --name ssh_attack --rcheck --seconds 60 --hitcount 5 -j REJECT --reject-with tcp-reset
+
+###########################################################
+# 攻撃対策: FTP Brute Force
+# FTPはパスワード認証のため、パスワード総当り攻撃に備える。
+# 1分間に5回しか接続トライをできないようにする。
+# FTPクライアント側が再接続を繰り返すのを防ぐためDROPではなくREJECTにする。
+# FTPサーバを立ち上げている場合、以下をアンコメントアウトする
+###########################################################
+-A INPUT -p tcp --syn -m multiport --dports 20,21 -m recent --name ftp_attack --set
+-A INPUT -p tcp --syn -m multiport --dports 20,21 -m recent --name ftp_attack --rcheck --seconds 60 --hitcount 5 -j LOG --log-prefix "ftp_brute_force: "
+-A INPUT -p tcp --syn -m multiport --dports 20,21 -m recent --name ftp_attack --rcheck --seconds 60 --hitcount 5 -j REJECT --reject-with tcp-reset
+
+###########################################################
+# 全ホスト(ブロードキャストアドレス、マルチキャストアドレス)宛パケットは破棄
+###########################################################
+-A INPUT -d 192.168.1.255   -j LOG --log-prefix "drop_broadcast: "
+-A INPUT -d 192.168.1.255   -j DROP
+-A INPUT -d 255.255.255.255 -j LOG --log-prefix "drop_broadcast: "
+-A INPUT -d 255.255.255.255 -j DROP
+-A INPUT -d 224.0.0.1       -j LOG --log-prefix "drop_broadcast: "
+-A INPUT -d 224.0.0.1       -j DROP
+# dropbox
+-A INPUT -p udp --dport 17500 -j DROP
+-A INPUT -p udp -m multiport --dport 137,138,139,445 -j DROP
+
+###########################################################
+# それ以外
+# 上記のルールにも当てはまらなかったものはロギングして破棄
+###########################################################
+-A INPUT -j LOG --log-prefix "drop: "
+-A INPUT -j DROP
+COMMIT

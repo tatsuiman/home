@@ -1,7 +1,7 @@
 #!/usr/bin/zsh
 
 if [[ ! -d ${HOME}/.zplug  ]]; then
-	curl -sL https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
+	curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh| zsh
     source ~/.zplug/init.zsh && zplug update --self
 else
     source ~/.zplug/init.zsh
@@ -39,7 +39,6 @@ bindkey '^ ' autosuggest-accept
 
 #zplug "themes/mh", from:oh-my-zsh
 zplug "themes/tjkirch", from:oh-my-zsh
-
 
 # Install plugins if there are plugins that have not been installed
 if ! zplug check --verbose; then
