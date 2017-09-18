@@ -1,6 +1,7 @@
 #!/usr/bin/zsh
 
 if [[ ! -d ${HOME}/.zplug  ]]; then
+	sudo apt-get install git curl
 	curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh| zsh
     source ~/.zplug/init.zsh && zplug update --self
 else
@@ -66,13 +67,9 @@ fi
 
 # OS Settings
 if [ `uname` = "Darwin" ]; then
-        alias ls='ls -G'
+	alias ls='ls -G'
 elif [ `uname` = "Linux" ]; then
-        #server
-        case $TERM in
-        linux) LANG=C ;;
-        *) LANG=ja_JP.UTF-8 ;;
-        esac
+	export LANG=C
 fi
 
 # alias
@@ -83,3 +80,12 @@ alias xxd='xxd -g 1'
 alias vi='vim -u NONE --noplugin'
 alias pip='pip --proxy $HTTP_PROXY'
 alias pip3='pip3 --proxy $HTTP_PROXY'
+
+# rbenv config
+if [[ ! -d ${HOME}/.rbenv  ]]; then
+	sudo apt-get -y install autoconf bison build-essential curl git-core libapr1 libaprutil1 libcurl4-openssl-dev libgmp3-dev libpcap-dev libpq-dev libreadline6-dev libsqlite3-dev libssl-dev libsvn1 libtool libxml2 libxml2-dev libxslt-dev libyaml-dev locate ncurses-dev openssl wget xsel zlib1g zlib1g-dev
+	git clone https://github.com/sstephenson/rbenv.git ${HOME}/.rbenv
+	git clone https://github.com/sstephenson/ruby-build.git ${HOME}/.rbenv/plugins/ruby-build
+fi
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"
