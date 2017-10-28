@@ -71,6 +71,9 @@ if [ `uname` = "Darwin" ]; then
 elif [ `uname` = "Linux" ]; then
 	export LANG=C
 fi
+if [ "$(locate -e ja_JP.UTF-8|wc -l)" -ne 0 ];then
+	export LANG=ja_JP.UTF-8
+fi
 
 # alias
 alias nkf.utf8='nkf -w --overwrite'
