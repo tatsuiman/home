@@ -11,22 +11,11 @@ export LANGUAGE=en_US.utf-8
 export LC_ALL=en_US.utf-8
 export LSCOLORS=ExfxcxdxbxGxDxabagacad
 
-# ヒストリー機能
-# command r でコマンド履歴を辿るのでいっぱいにしとく
-HISTFILE=~/.zsh_history      # ヒストリファイルを指定
-HISTSIZE=1000000             # ヒストリに保存するコマンド数
-SAVEHIST=100000              # ヒストリファイルに保存するコマンド数
-setopt hist_ignore_all_dups  # 重複するコマンド行は古い方を削除
-setopt hist_ignore_dups      # 直前と同じコマンドラインはヒストリに追加しない
-setopt share_history         # コマンド履歴ファイルを共有する
-setopt append_history        # 履歴を追加 (毎回 .zsh_history を作るのではなく)
-setopt inc_append_history    # 履歴をインクリメンタルに追加
-setopt hist_no_store         # historyコマンドは履歴に登録しない
-setopt hist_reduce_blanks    # 余分な空白は詰めて記録
 zstyle ':completion:*' list-colors ${LSCOLORS}
 zstyle ':completion:*:default' menu select=2
 
 alias ls='ls --color=auto'
+alias open='xdg-open'
 
 # 変更した時自動でコンパイル
 if [ ${HOME}/.zshrc -nt ${HOME}/.zshrc.zwc ]; then
@@ -43,10 +32,6 @@ zplug "zsh-users/zsh-autosuggestions"
 bindkey '^ ' autosuggest-accept
 
 # Container related plugins
-zplug "Dbz/zsh-kubernetes"
-zplug "ahmetb/kubectx", use:kubectx, as:command
-zplug "ahmetb/kubectx", use:kubens, as:command
-zplug "plugins/kube-ps1", from:oh-my-zsh, use:"kube-ps1.plugin.zsh"
 zplug "webyneter/docker-aliases"
 
 # Install plugins if there are plugins that have not been installed
@@ -58,6 +43,9 @@ if ! zplug check --verbose; then
 fi
 zplug load
 
+# 実行時刻を記録するよう設定する
+setopt extended_history
+
 # Developer settings
 # python
 if [ -f /usr/local/bin/virtualenvwrapper.sh ]; then
@@ -66,24 +54,34 @@ if [ -f /usr/local/bin/virtualenvwrapper.sh ]; then
     source /usr/local/bin/virtualenvwrapper.sh
 fi
 
-# k8s
-if [[ ! -d ${HOME}/.stern  ]]; then
-    mkdir -p ${HOME}/.stern
-    curl -L https://github.com/wercker/stern/releases/download/1.10.0/stern_linux_amd64 -o $HOME/.stern/stern
-    chmod 755 $HOME/.stern/stern
+# shell scripts
+export PATH=$PATH:$HOME/bin/sh
+if [ -d $HOME/bin/sh ] ; then
+	for i in `ls $HOME/bin/sh/`
+	do
+		export PATH=$PATH:$HOME/bin/sh/$i
+	done
 fi
-export PATH=$PATH:$HOME/.stern
-source <(kubectl completion zsh)
-source <(stern --completion=zsh)
-alias k='kubectl'
 
-# K8s
-function k8s_token(){
-	kubectl -n kube-system get secret $(kubectl -n kube-system get secret | grep default-token | awk '{print $1}') -o json | jq .data.token | tr -d '"'
+# safe mode
+function no_history(){
+	export HISTFILE=/dev/null
 }
+# termitanl title
+title() { printf "\033]0;$*\007"; }
 
-function k8s_api(){
-	KUBE_TOKEN=$(</var/run/secrets/kubernetes.io/serviceaccount/token)
-	curl -sSk -H "Authorization: Bearer $KUBE_TOKEN" \
-      https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_PORT_443_TCP_PORT/api/v1/$1
-}
+# ヒストリー機能
+HISTFILE=~/.zsh_history      # ヒストリファイルを指定
+HISTSIZE=1000000             # ヒストリに保存するコマンド数
+SAVEHIST=100000              # ヒストリファイルに保存するコマンド数
+setopt hist_ignore_all_dups  # 重複するコマンド行は古い方を削除
+setopt hist_ignore_dups      # 直前と同じコマンドラインはヒストリに追加しない
+setopt share_history         # コマンド履歴ファイルを共有する
+setopt append_history        # 履歴を追加 (毎回 .zsh_history を作るのではなく)
+setopt inc_append_history    # 履歴をインクリメンタルに追加
+setopt hist_no_store         # historyコマンドは履歴に登録しない
+setopt hist_reduce_blanks    # 余分な空白は詰めて記録
+setopt HIST_FIND_NO_DUPS     # 履歴検索中、(連続してなくとも)重複を飛ばす
+setopt HIST_IGNORE_SPACE     # 行頭がスペースのコマンドは記録しない
+export HISTORY_IGNORE='(for i in*|if *|git add*|git commit -m*|cd ..*|sudo rm *|rm *|export *KEY*|export *PASS*|base64 -d*)'
+
