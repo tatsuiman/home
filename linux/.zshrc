@@ -16,6 +16,9 @@ zstyle ':completion:*:default' menu select=2
 
 alias ls='ls --color=auto'
 alias open='xdg-open'
+alias vim='nvim'
+alias view='nvim -R'
+
 
 # 変更した時自動でコンパイル
 if [ ${HOME}/.zshrc -nt ${HOME}/.zshrc.zwc ]; then
@@ -46,23 +49,6 @@ zplug load
 # 実行時刻を記録するよう設定する
 setopt extended_history
 
-# Developer settings
-# python
-if [ -f /usr/local/bin/virtualenvwrapper.sh ]; then
-    export WORKON_HOME=$HOME/.virtualenvs
-    export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
-    source /usr/local/bin/virtualenvwrapper.sh
-fi
-
-# shell scripts
-export PATH=$PATH:$HOME/bin/sh
-if [ -d $HOME/bin/sh ] ; then
-	for i in `ls $HOME/bin/sh/`
-	do
-		export PATH=$PATH:$HOME/bin/sh/$i
-	done
-fi
-
 # safe mode
 function no_history(){
 	export HISTFILE=/dev/null
@@ -85,3 +71,28 @@ setopt HIST_FIND_NO_DUPS     # 履歴検索中、(連続してなくとも)重�
 setopt HIST_IGNORE_SPACE     # 行頭がスペースのコマンドは記録しない
 export HISTORY_IGNORE='(for i in*|if *|git add*|git commit -m*|cd ..*|sudo rm *|rm *|export *KEY*|export *PASS*|base64 -d*)'
 
+
+# Developer settings
+## python
+if [ -f /usr/local/bin/virtualenvwrapper.sh ]; then
+    export WORKON_HOME=$HOME/.virtualenvs
+    source /usr/local/bin/virtualenvwrapper.sh
+fi
+
+## nodejs
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+if ! [ "$(command -v nvm)" ]; then
+	curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
+	nvm install node
+fi
+
+## shell scripts
+export PATH=$PATH:$HOME/bin/sh
+if [ -d $HOME/bin/sh ] ; then
+	for i in `ls $HOME/bin/sh/`
+	do
+		export PATH=$PATH:$HOME/bin/sh/$i
+	done
+fi
