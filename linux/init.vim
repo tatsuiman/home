@@ -33,18 +33,29 @@ au InsertEnter,InsertLeave * set cursorline!
 filetype plugin indent on 
 syntax on
 
-" プラグイン設定
+" vim-plug設定
+if exists('g:vscode')
+  " VSCode extension
+  call plug#begin()
+    Plug 'machakann/vim-highlightedyank'
+  call plug#end()
+  "highlightedyank
+  let g:highlightedyank_highlight_duration = 150
+else
+  call plug#begin()
+    Plug 'preservim/nerdtree'
+    Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+  call plug#end()
+  nnoremap <C-t> :NERDTreeToggle<CR>
+  " Start NERDTree when Vim is started without file arguments.
+  autocmd StdinReadPre * let s:std_in=1
+  autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
+endif
+
 call plug#begin()
   Plug 'ntk148v/vim-horizon'
-  Plug 'preservim/nerdtree'
-  Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-"  Plug 'sheerun/vim-polyglot'
+  Plug 'sheerun/vim-polyglot'
 call plug#end()
-
-nnoremap <C-t> :NERDTreeToggle<CR>
-" Start NERDTree when Vim is started without file arguments.
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
 
 set termguicolors
 
