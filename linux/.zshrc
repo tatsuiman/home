@@ -9,12 +9,13 @@ fi
 export LC_ALL=en_US.UTF-8
 export LANGUAGE=en_US.utf-8
 export LC_ALL=en_US.utf-8
-export LSCOLORS=ExfxcxdxbxGxDxabagacad
 
 zstyle ':completion:*' list-colors ${LSCOLORS}
 zstyle ':completion:*:default' menu select=2
 
-alias ls='ls --color=auto'
+export LSCOLORS=ExfxcxdxbxGxDxabagacad
+alias ll='ls -lGF'
+alias ls='ls -GF'
 alias open='xdg-open'
 alias vim='nvim'
 alias view='nvim -R'
@@ -76,6 +77,9 @@ export HISTORY_IGNORE='(for i in*|if *|git add*|git commit -m*|cd ..*|sudo rm *|
 ## python
 if [ -f /usr/local/bin/virtualenvwrapper.sh ]; then
     export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+    if [[ `uname` == "Darwin" ]]; then
+        export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python3
+    fi
     export WORKON_HOME=$HOME/.virtualenvs
     export VIRTUALENVWRAPPER_VIRTUALENV=/usr/local/bin/virtualenv
     source /usr/local/bin/virtualenvwrapper.sh
@@ -91,6 +95,7 @@ if ! [ "$(command -v nvm)" ]; then
 fi
 
 ## shell scripts
+export PATH=$PATH:$HOME/bin/flutter
 export PATH=$PATH:$HOME/bin/sh
 if [ -d $HOME/bin/sh ] ; then
 	for i in `ls $HOME/bin/sh/`
