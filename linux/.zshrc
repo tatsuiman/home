@@ -1,4 +1,8 @@
 #!/usr/bin/zsh
+export LC_ALL=en_US.UTF-8
+export LANGUAGE=en_US.utf-8
+export LC_ALL=en_US.utf-8
+
 # zplug settings
 if [[ ! -d ${HOME}/.zplug  ]]; then
     curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh| zsh
@@ -6,18 +10,37 @@ if [[ ! -d ${HOME}/.zplug  ]]; then
 else
     source $HOME/.zplug/init.zsh
 fi
-export LC_ALL=en_US.UTF-8
-export LANGUAGE=en_US.utf-8
-export LC_ALL=en_US.utf-8
+
+# コマンドのスペルを訂正
+setopt correct
+
 export LSCOLORS=ExfxcxdxbxGxDxabagacad
-
-zstyle ':completion:*' list-colors ${LSCOLORS}
-zstyle ':completion:*:default' menu select=2
-
-alias ls='ls --color=auto'
 alias open='xdg-open'
 alias vim='nvim'
 alias view='nvim -R'
+if [[ `uname` == "Linux" ]]; then
+    alias ls='ls --color=auto'
+fi
+if [[ `uname` == "Darwin" ]]; then
+    alias ll='ls -lGF'
+    alias ls='ls -GF'
+fi
+
+# 補完機能を有効にする
+autoload -Uz compinit
+compinit -u
+
+# 補完候補を詰めて表示
+setopt list_packed
+
+# 補完で小文字でも大文字にマッチさせる
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+
+# 補完候補一覧をカラー表示
+autoload colors
+zstyle ':completion:*' list-colors ${LSCOLORS}
+zstyle ':completion:*:default' menu select=2
+
 
 
 # 変更した時自動でコンパイル
@@ -26,16 +49,14 @@ if [ ${HOME}/.zshrc -nt ${HOME}/.zshrc.zwc ]; then
 fi
 
 # misc plugins
+zplug "zsh-users/zsh-completions"
 zplug "denysdovhan/spaceship-prompt", use:spaceship.zsh, from:github, as:theme
 zplug "zsh-users/zsh-syntax-highlighting", defer:2
-zplug "zsh-users/zsh-completions"
 zplug "junegunn/fzf-bin", from:gh-r, as:command, rename-to:fzf
 zplug "junegunn/fzf", use:"shell/*.zsh"
-zplug "zsh-users/zsh-autosuggestions"
-bindkey '^ ' autosuggest-accept
+zplug "zsh-users/zsh-autosuggestions", use:"zsh-autosuggestions.zsh"
 
-# Container related plugins
-zplug "webyneter/docker-aliases"
+zstyle ':prezto:*:*' color 'yes'
 
 # Install plugins if there are plugins that have not been installed
 if ! zplug check --verbose; then
@@ -76,6 +97,9 @@ export HISTORY_IGNORE='(for i in*|if *|git add*|git commit -m*|cd ..*|sudo rm *|
 ## python
 if [ -f /usr/local/bin/virtualenvwrapper.sh ]; then
     export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+    if [[ `uname` == "Darwin" ]]; then
+        export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python3
+    fi
     export WORKON_HOME=$HOME/.virtualenvs
     export VIRTUALENVWRAPPER_VIRTUALENV=/usr/local/bin/virtualenv
     source /usr/local/bin/virtualenvwrapper.sh
@@ -98,3 +122,5 @@ if [ -d $HOME/bin/sh ] ; then
 		export PATH=$PATH:$HOME/bin/sh/$i
 	done
 fi
+# other app
+export PATH=$PATH:$HOME/bin/flutter/bin
