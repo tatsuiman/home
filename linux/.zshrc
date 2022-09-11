@@ -15,17 +15,16 @@ fi
 setopt correct
 
 export LSCOLORS=ExfxcxdxbxGxDxabagacad
-alias open='xdg-open'
 alias vim='nvim'
 alias view='nvim -R'
 alias k='kubectl'
 if [[ `uname` == "Linux" ]]; then
+    alias open='xdg-open'
     alias ls='ls --color=auto'
 fi
 if [[ `uname` == "Darwin" ]]; then
     alias ll='ls -lGF'
     alias ls='ls -GF'
-    alias open='/usr/bin/open'
     export PATH=$PATH:$HOME/Library/Android/sdk/platform-tools
     alias firefox='open -a /Applications/Firefox.app'
     alias chrome='open -a "/Applications/Google Chrome.app"'
