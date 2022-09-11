@@ -18,12 +18,19 @@ export LSCOLORS=ExfxcxdxbxGxDxabagacad
 alias open='xdg-open'
 alias vim='nvim'
 alias view='nvim -R'
+alias k='kubectl'
 if [[ `uname` == "Linux" ]]; then
     alias ls='ls --color=auto'
 fi
 if [[ `uname` == "Darwin" ]]; then
     alias ll='ls -lGF'
     alias ls='ls -GF'
+    alias open='/usr/bin/open'
+    export PATH=$PATH:$HOME/Library/Android/sdk/platform-tools
+    alias firefox='open -a /Applications/Firefox.app'
+    alias chrome='open -a "/Applications/Google Chrome.app"'
+    alias vlc='open -a "/Applications/VLC.app"'
+    alias code='open -a "/Applications/Visual Studio Code.app"'
 fi
 
 # 補完機能を有効にする
@@ -53,7 +60,7 @@ zplug "zsh-users/zsh-completions"
 zplug "denysdovhan/spaceship-prompt", use:spaceship.zsh, from:github, as:theme
 zplug "zsh-users/zsh-syntax-highlighting", defer:2
 zplug "junegunn/fzf-bin", from:gh-r, as:command, rename-to:fzf
-zplug "junegunn/fzf", use:"shell/*.zsh"
+zplug "junegunn/fzf", as:command, use:bin/fzf-tmux
 zplug "zsh-users/zsh-autosuggestions", use:"zsh-autosuggestions.zsh"
 
 zstyle ':prezto:*:*' color 'yes'
@@ -70,6 +77,15 @@ zplug load
 # 実行時刻を記録するよう設定する
 setopt extended_history
 
+# zshの履歴をfzfで検索
+function fzf-select-history() {
+    BUFFER=$(history -n -r 1 | fzf --query "$LBUFFER" --prompt="History > ")
+    CURSOR=$#BUFFER
+    zle reset-prompt
+}
+zle -N fzf-select-history
+bindkey '^r' fzf-select-history
+
 # safe mode
 function no_history(){
 	export HISTFILE=/dev/null
@@ -81,6 +97,8 @@ title() { printf "\033]0;$*\007"; }
 HISTFILE=~/.zsh_history      # ヒストリファイルを指定
 HISTSIZE=1000000             # ヒストリに保存するコマンド数
 SAVEHIST=100000              # ヒストリファイルに保存するコマンド数
+setopt hist_expire_dups_first # 履歴を切り詰める際に、重複する最も古いイベントから消す
+setopt hist_save_no_dups      # 履歴ファイルに書き出す際、新しいコマンドと重複する古いコマンドは切り捨てる
 setopt hist_ignore_all_dups  # 重複するコマンド行は古い方を削除
 setopt hist_ignore_dups      # 直前と同じコマンドラインはヒストリに追加しない
 setopt share_history         # コマンド履歴ファイルを共有する
