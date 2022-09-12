@@ -141,3 +141,8 @@ if [ -d $HOME/bin/sh ] ; then
 fi
 # other app
 export PATH=$PATH:$HOME/bin/flutter/bin
+
+# private rcfile
+if [ -f $HOME/.zshrc_private ]; then
+    source $HOME/.zshrc_private
+fi
