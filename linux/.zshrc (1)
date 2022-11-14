@@ -1,5 +1,4 @@
 #!/usr/bin/zsh
-# language
 export LC_ALL=en_US.UTF-8
 export LANGUAGE=en_US.utf-8
 export LC_ALL=en_US.utf-8
@@ -51,6 +50,7 @@ fi
 
 # misc plugins
 zplug "zsh-users/zsh-completions"
+zplug "denysdovhan/spaceship-prompt", use:spaceship.zsh, from:github, as:theme
 zplug "zsh-users/zsh-syntax-highlighting", defer:2
 zplug "junegunn/fzf-bin", from:gh-r, as:command, rename-to:fzf
 zplug "junegunn/fzf", use:"shell/*.zsh"
@@ -104,8 +104,6 @@ if [ -f /usr/local/bin/virtualenvwrapper.sh ]; then
     export VIRTUALENVWRAPPER_VIRTUALENV=/usr/local/bin/virtualenv
     source /usr/local/bin/virtualenvwrapper.sh
 fi
-export PATH="$HOME/.pyenv/bin:$PATH"
-eval "$(pyenv init -)"
 
 ## nodejs
 export NVM_DIR="$HOME/.nvm"
@@ -126,5 +124,3 @@ if [ -d $HOME/bin/sh ] ; then
 fi
 # other app
 export PATH=$PATH:$HOME/bin/flutter/bin
-
-eval "$(starship init zsh)"
