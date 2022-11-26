@@ -52,8 +52,7 @@ fi
 # misc plugins
 zplug "zsh-users/zsh-completions"
 zplug "zsh-users/zsh-syntax-highlighting", defer:2
-zplug "junegunn/fzf-bin", from:gh-r, as:command, rename-to:fzf
-zplug "junegunn/fzf", use:"shell/*.zsh"
+zplug "junegunn/fzf"
 zplug "zsh-users/zsh-autosuggestions", use:"zsh-autosuggestions.zsh"
 
 zstyle ':prezto:*:*' color 'yes'
@@ -104,8 +103,6 @@ if [ -f /usr/local/bin/virtualenvwrapper.sh ]; then
     export VIRTUALENVWRAPPER_VIRTUALENV=/usr/local/bin/virtualenv
     source /usr/local/bin/virtualenvwrapper.sh
 fi
-export PATH="$HOME/.pyenv/bin:$PATH"
-eval "$(pyenv init -)"
 
 ## nodejs
 export NVM_DIR="$HOME/.nvm"
