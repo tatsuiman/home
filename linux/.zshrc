@@ -16,15 +16,16 @@ fi
 setopt correct
 
 export LSCOLORS=ExfxcxdxbxGxDxabagacad
-alias open='xdg-open'
 alias vim='nvim'
 alias view='nvim -R'
 if [[ `uname` == "Linux" ]]; then
+    alias open='xdg-open'
     alias ls='ls --color=auto'
 fi
 if [[ `uname` == "Darwin" ]]; then
     alias ll='ls -lGF'
     alias ls='ls -GF'
+    alias code='open -a "Visual Studio Code"'
 fi
 
 # 補完機能を有効にする
@@ -71,7 +72,7 @@ setopt extended_history
 
 # safe mode
 function no_history(){
-	export HISTFILE=/dev/null
+    export HISTFILE=/dev/null
 }
 # termitanl title
 title() { printf "\033]0;$*\007"; }
@@ -104,6 +105,7 @@ if [ -f /usr/local/bin/virtualenvwrapper.sh ]; then
     source /usr/local/bin/virtualenvwrapper.sh
 fi
 
+export EDITOR=vim
 ## nodejs
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -125,3 +127,4 @@ fi
 export PATH=$PATH:$HOME/bin/flutter/bin
 
 eval "$(starship init zsh)"
+eval "$(direnv hook zsh)"
