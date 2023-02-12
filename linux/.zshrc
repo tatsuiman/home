@@ -67,6 +67,9 @@ if ! zplug check --verbose; then
 fi
 zplug load
 
+# termitanl title
+title() { printf "\033]0;$*\007"; }
+
 # 実行時刻を記録するよう設定する
 setopt extended_history
 
@@ -74,8 +77,14 @@ setopt extended_history
 function no_history(){
     export HISTFILE=/dev/null
 }
-# termitanl title
-title() { printf "\033]0;$*\007"; }
+
+# fzf history
+function select-history() {
+  BUFFER=$(history -n -r 1 | fzf --no-sort +m --query "$LBUFFER" --prompt="History > ")
+  CURSOR=$#BUFFER
+}
+zle -N select-history
+bindkey '^r' select-history
 
 # ヒストリー機能
 HISTFILE=~/.zsh_history      # ヒストリファイルを指定

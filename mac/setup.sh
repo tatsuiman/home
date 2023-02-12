@@ -8,3 +8,4 @@ brew install opensc
 brew install virtualenvwrapper
 brew install ffmpeg
 brew install --cask slack
+brew install tree fzf
