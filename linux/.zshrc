@@ -7,6 +7,7 @@ export LC_ALL=en_US.utf-8
 # zplug settings
 if [[ ! -d ${HOME}/.zplug  ]]; then
     curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh| zsh
+    sleep 3
     source $HOME/.zplug/init.zsh && zplug update --self
 else
     source $HOME/.zplug/init.zsh
@@ -121,7 +122,19 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 if ! [ "$(command -v nvm)" ]; then
 	curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
-	nvm install node
+	sleep 3
+	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+	[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+	nvm install v16
+	npm install -g @githubnext/github-copilot-cli
+fi
+## starship
+if ! [ "$(command -v starship)" ]; then
+	curl -sS https://starship.rs/install.sh | sh
+fi
+## direnv
+if ! [ "$(command -v direnv)" ]; then
+	sudo apt install direnv
 fi
 
 ## shell scripts
@@ -137,3 +150,4 @@ export PATH=$PATH:$HOME/bin/flutter/bin
 
 eval "$(starship init zsh)"
 eval "$(direnv hook zsh)"
+eval "$(github-copilot-cli alias -- "$0")"
