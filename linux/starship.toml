@@ -1,3 +1,5 @@
+format = '$all$directory$character'
+
 [aws]
 format = 'on [$symbol($profile )(\($region\) )]($style)'
 style = 'bold blue'
@@ -51,5 +53,5 @@ style = 'bold dimmed green'
 disabled = false
 format = '🕙[\[ $time \]]($style) '
 time_format = '%T'
-utc_time_offset = '-5'
-time_range = '10:00:00-14:00:00'
+utc_time_offset = '+9'
+time_range = '09:00:00-19:00:00'

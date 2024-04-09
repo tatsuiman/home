@@ -17,8 +17,7 @@ fi
 setopt correct
 
 export LSCOLORS=ExfxcxdxbxGxDxabagacad
-alias vim='nvim'
-alias view='nvim -R'
+alias awsp="source _awsp"
 if [[ `uname` == "Linux" ]]; then
     alias open='xdg-open'
     alias ls='ls --color=auto'
@@ -26,7 +25,7 @@ fi
 if [[ `uname` == "Darwin" ]]; then
     alias ll='ls -lGF'
     alias ls='ls -GF'
-    alias code='open -a "Visual Studio Code"'
+    alias code='open -a "Cursor"'
 fi
 
 # 補完機能を有効にする
@@ -125,8 +124,8 @@ if ! [ "$(command -v nvm)" ]; then
 	sleep 3
 	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 	[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-	nvm install v16
-	npm install -g @githubnext/github-copilot-cli
+	nvm install v20
+	npm install -g awsp
 fi
 ## starship
 if ! [ "$(command -v starship)" ]; then
@@ -134,20 +133,13 @@ if ! [ "$(command -v starship)" ]; then
 fi
 ## direnv
 if ! [ "$(command -v direnv)" ]; then
-	sudo apt install direnv
+	if [[ `uname` == "Darwin" ]]; then
+		brew install direnv
+	else
+		sudo apt install direnv
+	fi
 fi
-
-## shell scripts
-export PATH=$PATH:$HOME/bin/sh
-if [ -d $HOME/bin/sh ] ; then
-	for i in `ls $HOME/bin/sh/`
-	do
-		export PATH=$PATH:$HOME/bin/sh/$i
-	done
-fi
-# other app
-export PATH=$PATH:$HOME/bin/flutter/bin
 
 eval "$(starship init zsh)"
 eval "$(direnv hook zsh)"
-eval "$(github-copilot-cli alias -- "$0")"
+. `brew --prefix`/etc/profile.d/z.sh
