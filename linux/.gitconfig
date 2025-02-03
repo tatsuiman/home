@@ -1,0 +1,64 @@
+[user]
+  email = 2360691+tatsuiman@users.noreply.github.com
+  name = tatsui
+
+[credential]
+  helper = store
+
+[core]
+  editor = vim
+  autocrlf = input
+  precomposeUnicode = true
+
+[init]
+  defaultBranch = main
+
+[alias]
+  # 🚀 変更をすばやくコミット
+  ac = !git add -A && aicommits -a
+
+  # 🚀 現在のブランチを origin に push
+  pushp = "!git push origin $(git branch --show-current)"
+
+  # 🚀 GitHubのPull Request作成ページを開く（gh コマンド不要）
+  pr = "!open $(git remote get-url origin | sed -E 's/git@([^:]+):([^/]+)/https:\\/\\/\\1\\/\\2/' | sed 's/\\.git$//')/compare/$(git branch --show-current)?expand=1"
+
+  # 🚀 最近のブランチをインタラクティブに選んで切り替え (fzf 必須)
+  gco = "!git switch $(git branch --sort=-committerdate | fzf)"
+
+  # 🚀 見やすいログ表示（グラフ付き）
+  gl = log --graph --oneline --decorate --all
+
+  # 🚀 直前のコミットを修正する（コミット履歴をスッキリ）
+  fixup = "!git commit --fixup HEAD"
+
+  # 🚀 直前のコミットを取り消す（変更はそのまま）
+  undo = "!git reset --soft HEAD~1"
+
+  # 🚀 ステージングエリアの変更を確認
+  staged = diff --cached
+
+  # 🚀 直前のコミットメッセージを修正
+  fixlast = "commit --amend -m"
+
+  # 🚀 作業ブランチを一時的に別ディレクトリに作成（並行作業用）
+  worktree-add = "!git worktree add ../$(git branch --show-current)-temp"
+
+  # 🚀 一時作業ブランチを削除
+  worktree-remove = "!git worktree remove ../$(git branch --show-current)-temp"
+
+  # 🚀 マージ済みのローカルブランチを一括削除
+  delete-merged = "!git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d"
+
+  # 🚀 未追跡のファイルを削除してクリーンアップ
+  gclean = "!git clean -df"
+
+[filter "lfs"]
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
+  required = true
+
+[push]
+  autoSetupRemote = true
+

@@ -67,6 +67,9 @@ if ! zplug check --verbose; then
 fi
 zplug load
 
+# tmux上でCtrl-aやCtrl-eを使えるように
+bindkey -e
+
 # termitanl title
 title() { printf "\033]0;$*\007"; }
 
@@ -99,7 +102,7 @@ setopt hist_no_store         # historyコマンドは履歴に登録しない
 setopt hist_reduce_blanks    # 余分な空白は詰めて記録
 setopt HIST_FIND_NO_DUPS     # 履歴検索中、(連続してなくとも)重複を飛ばす
 setopt HIST_IGNORE_SPACE     # 行頭がスペースのコマンドは記録しない
-export HISTORY_IGNORE='(for i in*|if *|git add*|git commit -m*|cd ..*|sudo rm *|rm *|export *KEY*|export *PASS*|base64 -d*|\?\? *)'
+export HISTORY_IGNORE='(for i in*|if *|git add*|git commit -m*|cd ..*|sudo rm *|rm *|export *KEY*|export *PASS*|open *|base64 -d*|\?\? *)'
 
 
 # Developer settings
@@ -146,5 +149,4 @@ eval "$(starship init zsh)"
 eval "$(direnv hook zsh)"
 . `brew --prefix`/etc/profile.d/z.sh
 
-# tmux上でCtrl-aやCtrl-eを使えるように
-bindkey -e
+
