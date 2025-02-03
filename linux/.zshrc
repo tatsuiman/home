@@ -103,19 +103,19 @@ export HISTORY_IGNORE='(for i in*|if *|git add*|git commit -m*|cd ..*|sudo rm *|
 
 
 # Developer settings
-## python
-if [ -f /usr/local/bin/virtualenvwrapper.sh ]; then
-    export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
-    if [[ `uname` == "Darwin" ]]; then
-        export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python3
-    fi
-    export WORKON_HOME=$HOME/.virtualenvs
-    export VIRTUALENVWRAPPER_VIRTUALENV=/usr/local/bin/virtualenv
-    source /usr/local/bin/virtualenvwrapper.sh
-fi
-
 export EDITOR=vim
-## nodejs
+
+# python
+# `brew install pyenv`
+# `pyenv install 3.10.14`
+# `pyenv global 3.10.14`
+
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init --path)"
+eval "$(pyenv init -)"
+
+# nodejs
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
@@ -127,11 +127,13 @@ if ! [ "$(command -v nvm)" ]; then
 	nvm install v20
 	npm install -g awsp
 fi
-## starship
+
+# starship
 if ! [ "$(command -v starship)" ]; then
 	curl -sS https://starship.rs/install.sh | sh
 fi
-## direnv
+
+# direnv
 if ! [ "$(command -v direnv)" ]; then
 	if [[ `uname` == "Darwin" ]]; then
 		brew install direnv
@@ -143,3 +145,6 @@ fi
 eval "$(starship init zsh)"
 eval "$(direnv hook zsh)"
 . `brew --prefix`/etc/profile.d/z.sh
+
+# tmux上でCtrl-aやCtrl-eを使えるように
+bindkey -e
