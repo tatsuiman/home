@@ -149,4 +149,6 @@ eval "$(starship init zsh)"
 eval "$(direnv hook zsh)"
 . `brew --prefix`/etc/profile.d/z.sh
 
-
+# terrafrom
+# https://zenn.dev/bun913/articles/m1-mac-terraform-unstable
+export GODEBUG=asyncpreemptoff=1
