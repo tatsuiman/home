@@ -1,0 +1,7 @@
+git secrets --install
+git secrets --add 'password\s*=\s*["'\''][^"'\'' ]+["'\'']'
+git secrets --add 'api[_-]?key\s*=\s*["'\''][^"'\'' ]+["'\'']'
+git secrets --add 'secret\s*=\s*["'\''][^"'\'' ]+["'\'']'
+git secrets --add 'AWS_SECRET_ACCESS_KEY\s*=\s*[A-Za-z0-9+/=]+'
+git secrets --add 'GCP_CREDENTIALS\s*=\s*{.+}'
+git secrets --add 'sk-[A-Za-z0-9_-]{40,100}'
