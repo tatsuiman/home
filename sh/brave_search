@@ -1,0 +1,10 @@
+#!/bin/bash
+# Brave Web Search API
+# https://api-dashboard.search.brave.com/app/documentation/web-search/get-started
+# Query Parameters
+# https://api-dashboard.search.brave.com/app/documentation/web-search/query#WebSearchAPIQueryParameters
+export BRAVE_SEARCH_API_KEY=${BRAVE_SEARCH_API_KEY}
+curl -s --compressed "https://api.search.brave.com/res/v1/web/search?q=brave+search" \
+  -H "Accept: application/json" \
+  -H "Accept-Encoding: gzip" \
+  -H "X-Subscription-Token: ${BRAVE_SEARCH_API_KEY}"

@@ -149,6 +149,12 @@ eval "$(starship init zsh)"
 eval "$(direnv hook zsh)"
 . `brew --prefix`/etc/profile.d/z.sh
 
+# shellscripts
+export PATH="$PATH:$HOME/sh"
+
+# Infra Tools
 # terrafrom
 # https://zenn.dev/bun913/articles/m1-mac-terraform-unstable
 export GODEBUG=asyncpreemptoff=1
+# mysql
+export PATH="/usr/local/opt/mysql-client@8.0/bin:$PATH"

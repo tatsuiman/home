@@ -1,0 +1,11 @@
+#!/bin/bash
+# set temporary directory
+TEMP_DIR=$(mktemp -d)
+cd "$TEMP_DIR"
+# set slackdump search
+slackdump search messages "$1"
+cd slackdump*
+gunzip search.json.gz
+cat search.json | jq 'if .sm then .sm[:5] | map(select(.username != null and .text != null) | {channel_name: .channel.name, ts, username, text, permalink}) else empty end'
+cd ..
+rm -rf slackdump*

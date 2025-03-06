@@ -1,0 +1,2 @@
+#!/bin/bash
+slackdump list users |grep $1
