@@ -150,7 +150,8 @@ eval "$(direnv hook zsh)"
 . `brew --prefix`/etc/profile.d/z.sh
 
 # shellscripts
-export PATH="$PATH:$HOME/sh"
+export PATH="$PATH:$HOME/scripts/sh"
+export PATH="$PATH:$HOME/scripts/python"
 
 # Infra Tools
 # terrafrom

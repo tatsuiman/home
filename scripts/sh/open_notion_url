@@ -1,0 +1,3 @@
+#!/bin/bash
+
+python $HOME/scripts/python/open_notion_url.py ${1}
