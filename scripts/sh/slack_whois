@@ -1,2 +1,4 @@
 #!/bin/bash
+TEMP_DIR=$(mktemp -d)
+cd "$TEMP_DIR"
 slackdump list users |grep $1
