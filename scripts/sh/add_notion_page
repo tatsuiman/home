@@ -1,0 +1,5 @@
+#!/bin/bash
+
+cat << __EOF__ | python $HOME/scripts/python/add_notion_page.py "${1}"
+$(cat)
+__EOF__
