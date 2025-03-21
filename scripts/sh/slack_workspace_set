@@ -1,0 +1,2 @@
+#!/bin/bash
+slackdump workspace select ${1}
