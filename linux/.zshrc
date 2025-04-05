@@ -26,6 +26,7 @@ if [[ `uname` == "Darwin" ]]; then
     alias ll='ls -lGF'
     alias ls='ls -GF'
     alias code='open -a "Cursor"'
+    alias vlc='open -a "Vlc"'
 fi
 
 # 補完機能を有効にする
@@ -159,3 +160,4 @@ export PATH="$PATH:$HOME/scripts/python"
 export GODEBUG=asyncpreemptoff=1
 # mysql
 export PATH="/usr/local/opt/mysql-client@8.0/bin:$PATH"
+export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
